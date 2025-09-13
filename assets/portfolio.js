@@ -22,6 +22,11 @@ function renderPortfolio(items){
   const container = document.getElementById('portfolio');
   if(!container) return;
   container.innerHTML='';
+  const statusMap={ // map payment status to icon data
+    paid:{src:'img/paid.png',alt:'Lunas',title:'Lunas'}, // icon for paid
+    free:{src:'img/free.png',alt:'Gratis',title:'Gratis'}, // icon for free
+    unpaid:{src:'img/unpaid.png',alt:'Belum Bayar',title:'Belum Bayar'} // icon for unpaid
+  }; // end of map
   items.forEach(it=>{
     const el=document.createElement('div');
     el.className='portfolio-item';
@@ -30,13 +35,14 @@ function renderPortfolio(items){
     const media=isDrive
       ? `<iframe src="${escapeHtml(videoUrl)}" allow="autoplay" allowfullscreen></iframe>` // use drive preview
       : `<video controls src="${escapeHtml(videoUrl)}"></video>`; // no custom poster
+    const st=statusMap[it.paymentStatus]||statusMap.unpaid; // resolve icon based on paymentStatus
     el.innerHTML=`
       <div class="video-wrapper">
         ${media}
-        <img class="flag" src="img/${it.paid?'paid':'free'}.svg" alt="${it.paid?'Berbayar':'Gratis'}"> // path updated
+        <img class="flag" src="${st.src}" alt="${st.alt}" title="${st.title}"> <!-- status icon with tooltip -->
       </div>
       <p class="desc">${escapeHtml(it.description)}</p>
-    `;
+    `; // set card markup with status icon
     if(!isDrive){ // handle non-drive videos
       const v=el.querySelector('video'); // video element
       const w=el.querySelector('.video-wrapper'); // wrapper
