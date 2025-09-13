@@ -1,14 +1,28 @@
 // assets/portfolio.js
 
-function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))}
+const packageMap={}; // store package id → name
 
-async function loadAndRenderPortfolio(basePath="."){
-  try{
-    const res = await fetch(`${basePath}/config/portfolio.json?ts=${Date.now()}`);
-    const data = await res.json();
-    renderPortfolio(data.items || []);
-  }catch(e){ console.error("Portfolio load error:",e); }
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))} // basic HTML escape
+
+async function loadAndRenderPortfolio(basePath="."){ // load portfolio & prices
+  try{ // catch fetch errors
+    const [pfRes,priceRes]=await Promise.all([ // fetch both configs
+      fetch(`${basePath}/config/portfolio.json?ts=${Date.now()}`), // portfolio data
+      fetch(`${basePath}/config/prices.json?ts=${Date.now()}`) // prices for packages
+    ]); // end fetch
+    const data=await pfRes.json(); // parse portfolio json
+    const priceData=await priceRes.json(); // parse prices json
+    (priceData.packages||[]).forEach(pkg=>{packageMap[pkg.id]=pkg.name;}); // build id→name map
+    renderPortfolio(data.items||[]); // render portfolio items
+  }catch(e){ console.error("Portfolio load error:",e); } // log errors
 }
+
+function highlightPackages(text){ // replace placeholders with labels
+  return text.replace(/:pkg(\d+):/g,(_,id)=>{ // find :pkg<ID>:
+    const name=packageMap[id]??`:pkg${id}:`; // fallback if id unknown
+    return `<span class="pkg-highlight">${name}</span>`; // wrap with badge span
+  }); // end replace
+} // end helper
 
 function toDrivePreviewLink(url){
   if(typeof url!=="string" || !/drive\.google\.com/.test(url)) return url;
@@ -40,8 +54,8 @@ function renderPortfolio(items){
       <div class="video-wrapper">
         ${media}
       </div>
-      <p class="desc"><img class="flag ${st.cls}" src="${st.src}" alt="${st.alt}" title="${st.title}"> – ${escapeHtml(it.description)}</p> <!-- icon moved before text -->
-    `; // icon now inside description
+      <p class="desc"><img class="flag ${st.cls}" src="${st.src}" alt="${st.alt}" title="${st.title}"> – ${highlightPackages(escapeHtml(it.description))}</p> <!-- icon moved before text & package labels -->
+    `; // icon now inside description with highlights
     if(!isDrive){ // handle non-drive videos
       const v=el.querySelector('video'); // video element
       const w=el.querySelector('.video-wrapper'); // wrapper
