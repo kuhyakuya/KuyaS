@@ -91,11 +91,10 @@
 
     <section class="portfolio-section">
       <h2>Portofolio</h2>
-      <div class="portfolio-toggle"> <!-- Show Portofolio toggle -->
-        <button id="pfToggle" class="diamond-btn active"></button> <!-- diamond checklist -->
-        <span>Show Portofolio</span> <!-- label -->
+      <div class="portfolio-toggle"> <!-- Show/Hide button -->
+        <button id="pfToggle" class="btn detail">Show Portofolio</button> <!-- toggle button -->
       </div>
-      <div class="portfolio-grid" id="portfolio"></div>
+      <div class="portfolio-grid" id="portfolio" style="display:none"></div> <!-- hidden by default -->
     </section>
 
     <footer><small>© KuhyaKuya Studio</small></footer>
@@ -183,10 +182,11 @@
     loadPackages();
     Portfolio.loadAndRender();
     const pfToggle=document.getElementById('pfToggle'); // get toggle button
+    const pfGrid=document.getElementById('portfolio'); // get portfolio list
     pfToggle.addEventListener('click',()=>{ // attach click handler
-      pfToggle.classList.toggle('active'); // toggle active style
-      const show=pfToggle.classList.contains('active'); // current state
-      document.getElementById('portfolio').style.display=show?'':'none'; // show/hide list
+      const show=pfGrid.style.display==='none'; // determine state
+      pfGrid.style.display=show?'':'none'; // show/hide list
+      pfToggle.textContent=show?'Hide Portofolio':'Show Portofolio'; // update label
     }); // end handler
   </script>
 </body>

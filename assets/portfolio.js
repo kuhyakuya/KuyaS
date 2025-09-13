@@ -33,7 +33,7 @@ function renderPortfolio(items){
     el.innerHTML=`
       <div class="video-wrapper">
         ${media}
-        <img class="flag" src="assets/${it.paid?'paid':'free'}.svg" alt="${it.paid?'Berbayar':'Gratis'}">
+        <img class="flag" src="img/${it.paid?'paid':'free'}.svg" alt="${it.paid?'Berbayar':'Gratis'}"> // path updated
       </div>
       <p class="desc">${escapeHtml(it.description)}</p>
     `;
