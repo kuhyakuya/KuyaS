@@ -23,9 +23,9 @@ function renderPortfolio(items){
   if(!container) return;
   container.innerHTML='';
   const statusMap={ // map payment status to icon data
-    paid:{src:'img/paid.png',alt:'Lunas',title:'Lunas'}, // icon for paid
-    free:{src:'img/free.png',alt:'Gratis',title:'Gratis'}, // icon for free
-    unpaid:{src:'img/unpaid.png',alt:'Belum Bayar',title:'Belum Bayar'} // icon for unpaid
+    paid:{src:'img/paid.png',alt:'Lunas',title:'Lunas',cls:''}, // added cls for optional styling
+    free:{src:'img/free.png',alt:'Gratis',title:'Gratis',cls:'free'}, // added cls to invert color
+    unpaid:{src:'img/unpaid.png',alt:'Belum Bayar',title:'Belum Bayar',cls:''} // added cls for consistency
   }; // end of map
   items.forEach(it=>{
     const el=document.createElement('div');
@@ -39,10 +39,9 @@ function renderPortfolio(items){
     el.innerHTML=`
       <div class="video-wrapper">
         ${media}
-        <img class="flag" src="${st.src}" alt="${st.alt}" title="${st.title}"> <!-- status icon with tooltip -->
       </div>
-      <p class="desc">${escapeHtml(it.description)}</p>
-    `; // set card markup with status icon
+      <p class="desc"><img class="flag ${st.cls}" src="${st.src}" alt="${st.alt}" title="${st.title}"> – ${escapeHtml(it.description)}</p> <!-- icon moved before text -->
+    `; // icon now inside description
     if(!isDrive){ // handle non-drive videos
       const v=el.querySelector('video'); // video element
       const w=el.querySelector('.video-wrapper'); // wrapper

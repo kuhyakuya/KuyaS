@@ -35,7 +35,14 @@
     .portfolio-item .video-wrapper{position:relative;aspect-ratio:16/9} /* responsive 16:9 */
     .portfolio-item .video-wrapper iframe,
     .portfolio-item .video-wrapper video{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:#000;border:none} /* full-size media */
-    .portfolio-item .flag{position:absolute;top:8px;left:8px;width:60px;height:auto;border-radius:4px} /* flag badge */
+    .portfolio-item .flag{ /* payment status icon */
+      width:16px; /* fixed icon width */
+      height:16px; /* fixed icon height */
+      vertical-align:middle; /* align icon with text */
+      margin-right:6px; /* space between icon and text */
+      object-fit:contain; /* keep image ratio */
+    }
+    .portfolio-item .flag.free{filter:brightness(0) invert(1);} /* turn free icon white */
     .portfolio-item .desc{color:var(--muted);margin-top:8px;font-size:14px} /* portfolio text */
     .portfolio-toggle{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer} /* click area for text+diamond */
     .portfolio-toggle .toggle-text{color:#FF0072;text-decoration:underline} /* styled label text */
