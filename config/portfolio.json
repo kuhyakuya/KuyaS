@@ -12,5 +12,11 @@
       "video": "https://drive.google.com/file/d/1F5qmL7EKMOeLqY4NJH_ngLWGyN7PxhEZ/preview",
       "paid": true
     }
+     {
+      "title": "Contoh Video Berbayar",
+      "description": "Proyek berbayar bersama klien.",
+      "video": "https://drive.google.com/file/d/17kCJGhACM4yBUUe7hN2TiZe3dWdcKwuU/preview",
+      "paid": true
+    }
   ]
 }
