@@ -37,11 +37,10 @@
     .portfolio-item .video-wrapper video{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:#000;border:none} /* full-size media */
     .portfolio-item .flag{position:absolute;top:8px;left:8px;width:60px;height:auto;border-radius:4px} /* flag badge */
     .portfolio-item .desc{color:var(--muted);margin-top:8px;font-size:14px} /* portfolio text */
-    .portfolio-toggle{display:flex;align-items:center;gap:8px;margin-bottom:12px} /* toggle container */
-    .diamond-btn{width:15px;height:15px;border:2px solid #FF0072;background:transparent;transform:rotate(45deg);cursor:pointer;position:relative;border-radius:2px} /* diamond button style */ /* resized to 30px */
-    .diamond-btn .check{position:absolute;top:50%;left:50%;width:12px;height:20px;border:3px solid #fff;border-top:0;border-left:0;transform:translate(-50%,-60%) rotate(-45deg);display:none} /* check mark element */ /* keep upright */
-    .diamond-btn.active{background:var(--accent)} /* active fill */ /* shows accent when active */
-    .diamond-btn.active .check{display:block} /* show check on active */
+    .portfolio-toggle{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer} /* click area for text+diamond */
+    .portfolio-toggle .toggle-text{color:#FF0072;text-decoration:underline} /* styled label text */
+    .portfolio-toggle .diamond{width:15px;height:15px;border:2px solid #FF0072;transform:rotate(45deg);border-radius:2px;background:transparent} /* diamond indicator */
+    .portfolio-toggle.active .diamond{background:#FF0072} /* fill when active */
 
     .card{border-radius:12px;overflow:hidden;transition:height .3s ease;position:relative}
     .card-face{background:var(--card);border-radius:12px;padding:18px;
@@ -92,11 +91,10 @@
 
     <section class="portfolio-section">
       <h2>Portofolio</h2>
-        <div class="portfolio-toggle"> <!-- Show/Hide button -->
-          <button id="pfToggle" class="diamond-btn" aria-label="Show Portofolio"> <!-- diamond checklist button -->
-            <span class="check"></span> <!-- white check icon -->
-          </button>
-        </div>
+        <label id="pfToggle" class="portfolio-toggle" aria-label="Show Portofolio"> <!-- combined text+diamond -->
+          <span class="toggle-text">Tampilkan</span> <!-- underlined label text -->
+          <span class="diamond"></span> <!-- diamond indicator -->
+        </label>
       <div class="portfolio-grid" id="portfolio" style="display:none"></div> <!-- hidden by default -->
     </section>
 
@@ -184,12 +182,12 @@
     function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))}
     loadPackages();
     Portfolio.loadAndRender();
-      const pfToggle=document.getElementById('pfToggle'); // get diamond button
+      const pfToggle=document.getElementById('pfToggle'); // get toggle label
       const pfGrid=document.getElementById('portfolio'); // get portfolio list
       pfToggle.addEventListener('click',()=>{ // attach click handler
         const show=pfGrid.style.display==='none'; // determine state
         pfGrid.style.display=show?'':'none'; // show/hide list
-        pfToggle.classList.toggle('active',show); // toggle checkmark
+        pfToggle.classList.toggle('active',show); // toggle diamond fill
       }); // end handler
   </script>
 </body>
