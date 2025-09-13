@@ -10,6 +10,14 @@ async function loadAndRenderPortfolio(basePath="."){
   }catch(e){ console.error("Portfolio load error:",e); }
 }
 
+function toDrivePreviewLink(url){
+  if(typeof url!=="string" || !/drive\.google\.com/.test(url)) return url;
+  const idParam = url.match(/[?&]id=([^&]+)/);
+  const idPath = url.match(/\/d\/([^\/]+)/);
+  const id = idParam ? idParam[1] : idPath ? idPath[1] : null;
+  return id ? `https://drive.google.com/file/d/${id}/preview` : url;
+}
+
 function renderPortfolio(items){
   const container = document.getElementById('portfolio');
   if(!container) return;
@@ -17,10 +25,11 @@ function renderPortfolio(items){
   items.forEach(it=>{
     const el = document.createElement('div');
     el.className='portfolio-item';
-    const isDrivePreview = /https:\/\/drive\.google\.com\/file\/d\/.+\/preview/.test(it.video||'');
-    const media = isDrivePreview
-      ? `<iframe src="${escapeHtml(it.video)}" allow="autoplay" allowfullscreen></iframe>`
-      : `<video controls src="${escapeHtml(it.video)}"></video>`;
+    const video = toDrivePreviewLink(it.video);
+    const isDrive = /drive\.google\.com/.test(video||'');
+    const media = isDrive
+      ? `<iframe src="${escapeHtml(video)}" allow="autoplay" allowfullscreen></iframe>`
+      : `<video controls src="${escapeHtml(video)}"></video>`;
     el.innerHTML=`
       <div class="video-wrapper">
         ${media}
