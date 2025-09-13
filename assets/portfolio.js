@@ -17,9 +17,13 @@ function renderPortfolio(items){
   items.forEach(it=>{
     const el = document.createElement('div');
     el.className='portfolio-item';
+    const isDrivePreview = /https:\/\/drive\.google\.com\/file\/d\/.+\/preview/.test(it.video||'');
+    const media = isDrivePreview
+      ? `<iframe src="${escapeHtml(it.video)}" allow="autoplay" allowfullscreen></iframe>`
+      : `<video controls src="${escapeHtml(it.video)}"></video>`;
     el.innerHTML=`
       <div class="video-wrapper">
-        <video controls src="${escapeHtml(it.video)}"></video>
+        ${media}
         <img class="flag" src="assets/${it.paid?'paid':'free'}.svg" alt="${it.paid?'Berbayar':'Gratis'}">
       </div>
       <p class="desc">${escapeHtml(it.description)}</p>
