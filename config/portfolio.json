@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "title": "Contoh Video Gratis",
+      "description": "Proyek gratis untuk promosi internal.",
+      "video": "https://drive.google.com/uc?export=download&id=FILE_ID_GRATIS",
+      "paid": false
+    },
+    {
+      "title": "Contoh Video Berbayar",
+      "description": "Proyek berbayar bersama klien.",
+      "video": "https://drive.google.com/uc?export=download&id=FILE_ID_BAYAR",
+      "paid": true
+    }
+  ]
+}

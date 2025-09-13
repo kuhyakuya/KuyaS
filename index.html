@@ -28,6 +28,15 @@
 
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
 
+    /* ===== Portfolio ===== */
+    .portfolio-section h2{margin:40px 0 16px;font-size:18px}
+    .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+    .portfolio-item{background:var(--card);padding:12px;border-radius:12px}
+    .portfolio-item .video-wrapper{position:relative}
+    .portfolio-item video{width:100%;border-radius:8px;background:#000}
+    .portfolio-item .flag{position:absolute;top:8px;left:8px;width:60px;height:auto;border-radius:4px}
+    .portfolio-item .desc{color:var(--muted);margin-top:8px;font-size:14px}
+
     .card{border-radius:12px;overflow:hidden;transition:height .3s ease;position:relative}
     .card-face{background:var(--card);border-radius:12px;padding:18px;
       box-shadow:0 6px 18px rgba(0,0,0,0.6);border:2px solid rgba(255,255,255,0.05);
@@ -75,10 +84,16 @@
 
     <section class="grid" id="packages"></section>
 
+    <section class="portfolio-section">
+      <h2>Portofolio</h2>
+      <div class="portfolio-grid" id="portfolio"></div>
+    </section>
+
     <footer><small>© KuhyaKuya Studio</small></footer>
   </main>
 
   <script src="assets/pricing.js"></script>
+  <script src="assets/portfolio.js"></script>
   <script>
     const texts=[
       "Harga transparan, kerjaan adil. Satu klik untuk hasil terbaik bagi client dan freelancer.",
@@ -157,6 +172,7 @@
     function numberWithSeparators(x){return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')||'0'}
     function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))}
     loadPackages();
+    Portfolio.loadAndRender();
   </script>
 </body>
 </html>
