@@ -32,9 +32,10 @@
     .portfolio-section h2{margin:40px 0 16px;font-size:18px}
     .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
     .portfolio-item{background:var(--card);padding:12px;border-radius:12px}
-    .portfolio-item .video-wrapper{position:relative}
-    .portfolio-item video,
-    .portfolio-item iframe{width:100%;border-radius:8px;background:#000;border:none}
+    .portfolio-item .video-wrapper{position:relative;aspect-ratio:16/9} /* responsive 16:9 */
+    .portfolio-item .video-wrapper iframe,
+    .portfolio-item .video-wrapper video{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:#000;border:none} /* full-size media */
+    .portfolio-item .video-wrapper .thumb{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:8px;background:#000} /* thumb fallback */
     .portfolio-item .flag{position:absolute;top:8px;left:8px;width:60px;height:auto;border-radius:4px}
     .portfolio-item .desc{color:var(--muted);margin-top:8px;font-size:14px}
 
