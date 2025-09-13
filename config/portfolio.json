@@ -10,13 +10,13 @@
       "title": "Contoh Video Berbayar",
       "description": "Proyek berbayar bersama klien.",
       "video": "https://drive.google.com/file/d/1F5qmL7EKMOeLqY4NJH_ngLWGyN7PxhEZ/preview",
-      "paymentStatus": "paid"
+      "paymentStatus": "free"
     },
      {
-      "title": "Contoh Video Belum Bayar",
-      "description": "Proyek belum dibayar atau klien kabur.",
+      "title": "Video event meramaikan 17 agustus 2024 bersama SD/MI",
+      "description": "Projek Berbayar.",
       "video": "https://drive.google.com/file/d/17kCJGhACM4yBUUe7hN2TiZe3dWdcKwuU/preview",
-      "paymentStatus": "unpaid"
+      "paymentStatus": "paid"
     }
   ]
 }
