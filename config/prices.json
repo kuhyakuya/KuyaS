@@ -1,0 +1,164 @@
+{
+  "whatsapp": "6283862121733",
+  "surcharge": {
+    "1": 30,
+    "2": 15,
+    "3": 0
+  },
+  "bufferFee": {
+    "30": 10,
+    "60": 20,
+    "120": 30
+  },
+  "packages": [
+    {
+  "id": 4,
+  "name": "Paket Gabut",
+  "price": 0,
+  "revisions": 0,
+  "durationText": "Terserah editor",
+  "overRatePerMin": 0,
+  "leadTime": "Tidak ada deadline",
+  "workloadPerMin": 1095,
+  "disabled": true, 
+  "features": [
+    "Kualitas menyesuaikan mood editor",
+    "Semua aspek ditentukan oleh editor"
+  ],
+  "tags": ["Random", "Eksperimen"],
+  "policies": [
+    "Editor berhak berhenti di tengah proses editing, jika dirasa jenuh",
+    "Edit sesuai mood editor",
+    "Musik bebas terserah editor",
+    "Tidak ada revisi",
+    "Gratis (harga 0)",
+    "Boleh dipakai untuk portofolio editor",
+    "Konsep terserah editor",
+    "Tidak ada deadline",
+    "Editor berhak menolak projek jika file RAW dinilai tidak berkualitas",
+    "Klien tidak berhak complain atas hasil editing",
+    "Copyright dipegang editor",
+    "Klien boleh memberi saran, tapi tidak mengikat editor"
+  ]
+},
+    {
+      "id": 1,
+      "name": "Paket InstaClip",
+      "price": 15000,
+      "revisions": 1,
+      "durationText": "1–5 menit",
+      "overRatePerMin": 5000,
+      "leadTime": "0–2 hari",
+      "workloadPerMin": 0.5,
+      "disabled": false, 
+      "features": [
+        "cut basic",
+        "overlay & sederhana",
+        "add backsound",
+        "Gratis Revisi 1x"
+      ],
+      "tags": ["Konten TikTok/Reels", "Highlight Gaming", "Video pendek promosi", "Video Tugas"],
+      "policies": [
+        "Revisi gratis 1x. Lebih dari itu dikenakan IDR 10.000/revisi.",
+        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
+        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 10.000 - IDR 100.000 sesuai kerumitan brief revisi",
+        "Brief tidak boleh berubah setelah proyek dimulai.",
+        "Deadline dihitung setelah semua materi lengkap diterima.",
+        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
+        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
+        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
+        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
+        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
+        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Paket Standar",
+      "price": 70000,
+      "revisions": 2,
+      "durationText": "1–5 menit",
+      "overRatePerMin": 12000,
+      "leadTime": "1–3 hari",
+      "workloadPerMin": 1,
+      "disabled": false, 
+      "features": [
+        "cut + merge kompleks",
+        "overlay + efek basic",
+        "add backsound bervariasi",
+        "transisi sederhana",
+        "add teks subtitle",
+        "filter warna dasar",
+        "Gratis Revisi 2x"
+      ],
+      "tags": ["Konten YouTube", "Vlog", "Video Edukasi", "Film Pendek Ringan"],
+      "policies": [
+        "Revisi gratis 2x. Lebih dari itu dikenakan IDR 15.000/revisi.",
+        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
+        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 15.000 - IDR 100.000 sesuai kerumitan brief revisi",
+        "Brief tidak boleh berubah setelah proyek dimulai.",
+        "Deadline dihitung setelah semua materi lengkap diterima.",
+        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
+        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
+        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
+        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
+        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
+        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Paket Kreator",
+      "price": 150000,
+      "revisions": 3,
+      "durationText": "1–5 menit",
+      "overRatePerMin": 32000,
+      "leadTime": "3–5 hari",
+      "workloadPerMin": 3,
+      "disabled": false, 
+      "features": [
+        "editing kompleks",
+        "transisi dinamis",
+        "efek teks animasi",
+        "color correction",
+        "motion graphics sederhana",
+        "Gratis Revisi 3x"
+      ],
+      "tags": ["Iklan Produk", "Cinematic", "Motion Graphics", "Video Musik"],
+      "policies": [
+        "Revisi gratis 3x. Lebih dari itu dikenakan IDR 20.000/revisi.",
+        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
+        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 20.000 - IDR 100.000 sesuai kerumitan brief revisi",
+        "Brief tidak boleh berubah setelah proyek dimulai.",
+        "Deadline dihitung setelah semua materi lengkap diterima.",
+        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
+        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
+        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
+        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
+        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
+        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00."
+      ]
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
