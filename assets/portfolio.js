@@ -28,6 +28,15 @@ function renderPortfolio(items){
       </div>
       <p class="desc">${escapeHtml(it.description)}</p>
     `;
+    if(!isDrivePreview){
+      const video = el.querySelector('video');
+      const wrapper = el.querySelector('.video-wrapper');
+      if(video && wrapper){
+        video.addEventListener('error',()=>{
+          wrapper.innerHTML=`Video tidak tersedia <a href="${escapeHtml(it.video)}" download>Download video</a>`;
+        });
+      }
+    }
     container.appendChild(el);
   });
 }
