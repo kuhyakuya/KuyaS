@@ -44,6 +44,18 @@
     }
     .portfolio-item .flag.free{filter:brightness(0) invert(1);} /* turn free icon white */
     .portfolio-item .desc{color:var(--muted);margin-top:8px;font-size:14px} /* portfolio text */
+    .pkg-highlight{ /* package label badge */
+      display:inline-block; /* inline badge */
+      background:rgba(255,0,114,0.1); /* light accent background */
+      border:1px solid #FF0072; /* accent border */
+      color:#FF0072; /* accent text color */
+      font-weight:600; /* bold text */
+      font-size:0.9em; /* slightly smaller font */
+      padding:2px 6px; /* inner spacing */
+      border-radius:6px; /* rounded corners */
+      margin:0 2px; /* small horizontal gap */
+      vertical-align:middle; /* align with text */
+    } /* end badge style */
     .portfolio-toggle{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer} /* click area for text+diamond */
     .portfolio-toggle .toggle-text{color:#FF0072;text-decoration:underline} /* styled label text */
     .portfolio-toggle .diamond{width:15px;height:15px;border:2px solid #FF0072;transform:rotate(45deg);border-radius:2px;background:transparent} /* diamond indicator */
