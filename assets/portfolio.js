@@ -80,6 +80,7 @@ function animatePortfolioItems(){
   const items=container.querySelectorAll('.portfolio-item');
   setTimeout(()=>{ // allow reflow before starting
     items.forEach((el,i)=>{
+      el.classList.remove('hide');
       setTimeout(()=>{
         el.classList.add('show');
       },i*150);
@@ -87,13 +88,23 @@ function animatePortfolioItems(){
   },50);
 }
 
-function resetPortfolioItems(){
+function hidePortfolioItems(){
   const container=document.getElementById('portfolio');
   if(!container) return;
-  container.querySelectorAll('.portfolio-item').forEach(el=>el.classList.remove('show'));
+  const items=container.querySelectorAll('.portfolio-item');
+  items.forEach((el,i)=>{
+    setTimeout(()=>{
+      el.classList.remove('show');
+      el.classList.add('hide');
+    },i*100);
+  });
+  setTimeout(()=>{
+    container.innerHTML='';
+    container.style.display='none';
+  },500);
 }
 window.Portfolio = {
   loadAndRender: loadAndRenderPortfolio,
   animate: animatePortfolioItems,
-  reset: resetPortfolioItems
+  hide: hidePortfolioItems
 };

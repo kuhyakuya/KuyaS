@@ -43,6 +43,11 @@
       opacity:1;
       transform:translateY(0);
     }
+    .portfolio-item.hide{
+      opacity:0;
+      transform:translateY(20px);
+      transition:opacity 0.4s ease,transform 0.4s ease;
+    }
     .portfolio-item .video-wrapper{position:relative;aspect-ratio:16/9} /* responsive 16:9 */
     .portfolio-item .video-wrapper iframe,
     .portfolio-item .video-wrapper video{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:#000;border:none} /* full-size media */
@@ -298,13 +303,14 @@
       const pfToggle=document.getElementById('pfToggle'); // get toggle label
       const pfGrid=document.getElementById('portfolio'); // get portfolio list
       pfToggle.addEventListener('click',()=>{ // attach click handler
-        const show=pfGrid.style.display==='none'; // determine state
-        pfGrid.style.display=show?'':'none'; // show/hide list
-        pfToggle.classList.toggle('active',show); // toggle diamond fill
-        if(show){
-          Portfolio.animate();
+        const hidden=pfGrid.style.display==='none'; // determine state
+        if(hidden){
+          pfGrid.style.display='';
+          pfToggle.classList.toggle('active',true); // toggle diamond fill
+          Portfolio.loadAndRender();
         }else{
-          Portfolio.reset();
+          pfToggle.classList.toggle('active',false); // toggle diamond fill
+          Portfolio.hide();
         }
       }); // end handler
 
