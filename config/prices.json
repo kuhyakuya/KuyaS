@@ -88,8 +88,8 @@
       "workloadPerMin": 1,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 0.6,
-        "idealDaysPerMinute": 1,
+        "minDaysPerMinute": 2,
+        "idealDaysPerMinute": 3,
         "surchargePercent": 12
       },
       "features": [
@@ -124,8 +124,8 @@
       "workloadPerMin": 3,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 1,
-        "idealDaysPerMinute": 1.2,
+        "minDaysPerMinute": 3,
+        "idealDaysPerMinute": 5,
         "surchargePercent": 15
       },
       "features": [
