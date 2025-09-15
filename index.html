@@ -31,7 +31,18 @@
     /* ===== Portfolio ===== */
     .portfolio-section h2{margin:40px 0 16px;font-size:18px}
     .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
-    .portfolio-item{background:var(--card);padding:12px;border-radius:12px}
+    .portfolio-item{
+      background:var(--card);
+      padding:12px;
+      border-radius:12px;
+      opacity:0;
+      transform:translateY(20px);
+      transition:opacity 0.4s ease,transform 0.4s ease;
+    }
+    .portfolio-item.show{
+      opacity:1;
+      transform:translateY(0);
+    }
     .portfolio-item .video-wrapper{position:relative;aspect-ratio:16/9} /* responsive 16:9 */
     .portfolio-item .video-wrapper iframe,
     .portfolio-item .video-wrapper video{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;background:#000;border:none} /* full-size media */
@@ -290,6 +301,11 @@
         const show=pfGrid.style.display==='none'; // determine state
         pfGrid.style.display=show?'':'none'; // show/hide list
         pfToggle.classList.toggle('active',show); // toggle diamond fill
+        if(show){
+          Portfolio.animate();
+        }else{
+          Portfolio.reset();
+        }
       }); // end handler
 
     const policyBtn=document.getElementById('policyBtn');
