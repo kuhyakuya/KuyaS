@@ -167,7 +167,7 @@
               </div>
             </div>
             <div class="card-face card-back hide">
-              <h4>Kebijakan Paket ${escapeHtml(pkg.name)}</h4>
+              <h4>Kebijakan ${escapeHtml(pkg.name)}</h4>
               <ul>${(pkg.policy||["Tidak ada kebijakan tambahan"]).map(p=>`<li>${escapeHtml(p)}</li>`).join('')}</ul>
               <button class="back-btn">← Kembali</button>
             </div>
