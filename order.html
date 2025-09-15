@@ -97,6 +97,7 @@
           <div class="total"><span>Total</span><span id="sumTotal">IDR 0</span></div>
           <div class="helper">Estimasi selesai: <b id="eta">-</b></div>
         </div>
+        <div id="surchargeNote" class="helper warn" style="display:none"></div>
         <div style="margin-top:16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px">
           <button id="btnOrder" class="btn" disabled>Order via WhatsApp</button>
           <span id="orderCode" class="pill" title="Order Code"></span>
@@ -145,16 +146,30 @@
       }
     })();
 
-    function estimateMinDays(durasi, workloadPerMin){
-      const requiredHours = durasi * (workloadPerMin || 0.5);
-      const avgHoursPerDay = 5;
-      return Math.ceil(requiredHours / avgHoursPerDay);
-    }
-
     function update(){
       if(!pkg) return;
       const durasi=Math.max(1,parseInt(document.getElementById('durasi').value||0,10));
-      let days=Math.max(1,parseInt(document.getElementById('deadline').value||0,10));
+      const deadlineInput=document.getElementById('deadline');
+      const policy=Pricing.getDeadlineGuidance(pkg,durasi);
+      const rawDeadline=parseInt(deadlineInput.value||0,10);
+      const lastAuto=Number(deadlineInput.dataset.autoValue||0);
+      const isAutoValue=!rawDeadline||rawDeadline===lastAuto;
+      const deadlineHelper=document.getElementById('deadlineHelper');
+      const defaultHelper=`Perhitungan dimulai <b>hari berikutnya sesuai jam kerja</b> setelah <b>file RAW diterima</b>.`;
+      let days;
+      if(isAutoValue){
+        days=policy.defaultDays;
+        deadlineHelper.innerHTML=defaultHelper;
+      } else if(rawDeadline<policy.defaultDays){
+        days=policy.defaultDays;
+        deadlineHelper.innerHTML=`<span class='warn'>Deadline disesuaikan ke minimum ${policy.defaultDays} hari sesuai kebijakan paket.</span>`;
+      } else {
+        days=rawDeadline;
+        deadlineHelper.innerHTML=defaultHelper;
+      }
+      deadlineInput.value=String(days);
+      deadlineInput.min=String(policy.defaultDays);
+      deadlineInput.dataset.autoValue=String(policy.defaultDays);
       const note=(document.getElementById('note').value||'').trim();
       const ref=(document.getElementById('ref').value||'').trim();
 
@@ -170,16 +185,6 @@
         refErr.style.display='block';
         refOK=false;
       } else { refInput.classList.remove('invalid'); refErr.style.display='none'; }
-
-      const workload = pkg.workloadPerMin || 0.5;
-      const minDays = estimateMinDays(durasi, workload);
-      if(days < minDays){
-        days = minDays;
-        document.getElementById('deadline').value = minDays;
-        document.getElementById('deadlineHelper').innerHTML = `<span class='warn'>Deadline disesuaikan ke minimum ${minDays} hari (durasi terlalu panjang).</span>`;
-      } else {
-        document.getElementById('deadlineHelper').innerHTML = `Perhitungan dimulai <b>hari berikutnya sesuai jam kerja</b> setelah <b>file RAW diterima</b>.`;
-      }
 
       const calc = Pricing.calcTotal(pkg, cfg, promo, durasi, days);
 
@@ -197,6 +202,18 @@
       document.getElementById('sumBuffer').textContent=`+${calc.bufPerc}% = ${Pricing.fmtIDR(calc.bufVal)}`;
       document.getElementById('sumTotal').textContent=Pricing.fmtIDR(calc.total);
       document.getElementById('eta').textContent=addDays(nextDayStart(),days-1).toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+      const surchargeNote=document.getElementById('surchargeNote');
+      if(calc.surchargeVal>0 && calc.surPerc>0 && calc.deadline?.surchargePercent){
+        const idealRate=calc.deadline?.idealDaysPerMinute ?? policy.idealDaysPerMinute;
+        const recommendedRaw=(idealRate||0)*durasi;
+        const recommendedDays=Math.max(policy.defaultDays, calc.deadline?.idealDays||0, Math.ceil(recommendedRaw||0));
+        surchargeNote.style.display='block';
+        surchargeNote.textContent=`💡 Catatan: Harga akan lebih murah jika Anda menambah deadline ke ≥ ${recommendedDays} hari sehingga tidak dikenakan Deadline Surcharge.`;
+      } else {
+        surchargeNote.style.display='none';
+        surchargeNote.textContent='';
+      }
 
       const code=`ORD-r${String(durasi).padStart(2,'0')}.${String(days).padStart(2,'0')}h.${calc.total}.p${pkg.id}-${randCode(6)}`;
       document.getElementById('orderCode').textContent=code;
