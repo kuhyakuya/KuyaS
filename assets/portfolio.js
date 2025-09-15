@@ -69,4 +69,18 @@ function renderPortfolio(items){
   });
 }
 
-window.Portfolio = { loadAndRender: loadAndRenderPortfolio };
+function animatePortfolioItems(){
+  const items=document.querySelectorAll('#portfolio .portfolio-item');
+  items.forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('show'),i*150);
+  });
+}
+
+function resetPortfolioItems(){
+  document.querySelectorAll('#portfolio .portfolio-item.show').forEach(el=>el.classList.remove('show'));
+}
+window.Portfolio = {
+  loadAndRender: loadAndRenderPortfolio,
+  animate: animatePortfolioItems,
+  reset: resetPortfolioItems
+};
