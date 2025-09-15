@@ -88,6 +88,18 @@
 
     footer{position:fixed;bottom:0;left:0;width:100%;background:var(--bg);color:var(--muted);
       font-size:13px;text-align:center;padding:8px 0;z-index:10}
+    footer .footer-link{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline}
+
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);
+      backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000}
+    .modal-overlay.show{display:flex}
+    .modal-box{background:var(--card);width:100%;max-width:800px;max-height:90vh;overflow-y:auto;
+      border-radius:12px;padding:24px;color:#fff}
+    .modal-close{background:var(--detail);color:#fff;border:none;padding:6px 10px;border-radius:8px;
+      cursor:pointer;margin-bottom:16px}
+    .status-guide{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+    .status-item{display:flex;align-items:flex-start;gap:10px}
+    .status-item img{height:24px;margin-right:6px}
 
     .rekom .card-face{border:2px solid var(--gold)!important;box-shadow:0 0 0 1px rgba(255,213,79,.3),0 6px 18px rgba(255,213,79,.25)}
     .ribbon{position:absolute;top:14px;right:14px;background:linear-gradient(135deg,var(--gold),#e6b800);
@@ -117,8 +129,67 @@
       <div class="portfolio-grid" id="portfolio" style="display:none"></div> <!-- hidden by default -->
     </section>
 
-    <footer><small>© KuhyaKuya Studio</small></footer>
+    <footer><button id="policyBtn" class="footer-link">Kebijakan & Panduan</button></footer>
   </main>
+
+  <div id="policyModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box">
+      <button id="modalClose" class="modal-close">Tutup</button>
+      <h2>Kebijakan Global</h2>
+      <h3>Revisi</h3>
+      <ul>
+        <li>Revisi minor (typo, glitch, potong scene kecil) gratis x kali sesuai paket.</li>
+        <li>Revisi besar (ubah konsep, ganti footage utama, tambah durasi) dihitung biaya tambahan.</li>
+        <li>Permintaan revisi di luar jangka waktu yang disepakati akan dianggap proyek baru.</li>
+      </ul>
+      <h3>Hak untuk Portofolio</h3>
+      <ul>
+        <li>Editor berhak menampilkan hasil akhir di portofolio sebagai contoh karya.</li>
+        <li>Jika klien ingin hasil tidak dipublikasikan, wajib menyampaikan secara tertulis (chat/email) sebelum proyek selesai.</li>
+        <li>Tanpa permintaan tertulis, editor berhak menampilkan cuplikan atau highlight.</li>
+      </ul>
+      <h3>Perjanjian DP (Down Payment)</h3>
+      <ul>
+        <li>DP minimal 30–50% dari total biaya sebagai tanda jadi dan mem-booking jadwal produksi.</li>
+        <li>Proses editing dimulai setelah DP diterima.</li>
+        <li>DP tidak dapat dikembalikan bila klien membatalkan proyek sepihak.</li>
+      </ul>
+      <h3>Pembayaran Tidak Terselesaikan / Klien Kabur</h3>
+      <ul>
+        <li>Jika sisa pembayaran tidak dilunasi dalam waktu ___ hari setelah hasil final diserahkan,
+          editor berhak menahan file final tanpa watermark dan/atau tidak memberikan hak penggunaan.</li>
+        <li>Jika setelah tenggat tetap tidak ada pelunasan, editor berhak mempublikasikan kembali hasil karya sebagai portofolio dan menagih sesuai hukum yang berlaku.</li>
+      </ul>
+      <h3>Backup</h3>
+      <ul>
+        <li>Editor menyimpan backup project dan file mentah (project file, footage) maksimal ___ bulan setelah proyek selesai.</li>
+        <li>Setelah masa itu, editor tidak menjamin ketersediaan file.</li>
+        <li>Permintaan backup setelah periode tersebut bisa dikenakan biaya tambahan.</li>
+      </ul>
+      <h3>Raw File</h3>
+      <ul>
+        <li>File mentah proyek (contoh: .prproj, .aep, footage asli) tidak termasuk dalam paket standar.</li>
+        <li>Jika klien menginginkan file mentah, akan dikenakan biaya tambahan sesuai ukuran dan kompleksitas.</li>
+        <li>File mentah hanya diberikan setelah pembayaran penuh diterima.</li>
+      </ul>
+
+      <h2>Panduan Simbol Status Proyek</h2>
+      <div class="status-guide">
+        <div class="status-item">
+          <img src="img/free.png" alt="free icon">
+          <div><strong>Free</strong><br>Proyek gratis: bisa berupa paket Gabut, promosi internal, atau proyek tak berbayar.</div>
+        </div>
+        <div class="status-item">
+          <img src="img/paid.png" alt="paid icon">
+          <div><strong>Paid</strong><br>Proyek berbayar yang sudah <strong>lunas</strong>, seluruh pembayaran telah diterima.</div>
+        </div>
+        <div class="status-item">
+          <img src="img/unpaid.png" alt="unpaid icon">
+          <div><strong>Unpaid</strong><br>Pesanan yang <strong>belum dibayar</strong> atau kasus klien yang “kabur”. Video aman sebagai contoh karya, namun tidak boleh digunakan komersial sampai pembayaran diselesaikan.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/pricing.js"></script>
   <script src="assets/portfolio.js"></script>
@@ -208,6 +279,14 @@
         pfGrid.style.display=show?'':'none'; // show/hide list
         pfToggle.classList.toggle('active',show); // toggle diamond fill
       }); // end handler
+
+    const policyBtn=document.getElementById('policyBtn');
+    const policyModal=document.getElementById('policyModal');
+    const modalClose=document.getElementById('modalClose');
+    function closeModal(){ policyModal.classList.remove('show'); document.body.style.overflow=''; }
+    policyBtn.addEventListener('click',()=>{ policyModal.classList.add('show'); document.body.style.overflow='hidden'; });
+    modalClose.addEventListener('click',closeModal);
+    policyModal.addEventListener('click',e=>{ if(e.target===policyModal) closeModal(); });
   </script>
 </body>
 </html>
