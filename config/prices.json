@@ -17,9 +17,9 @@
       "workloadPerMin": 1095,
       "disabled": true,
       "deadlinePolicy": {
-        "minDaysPerMinute": 0.2,
-        "idealDaysPerMinute": 0.2,
-        "surchargePercent": 0
+        "minDaysPerMinute": 2,
+        "idealDaysPerMinute": 5,
+        "surchargePercent": 15
       },
       "features": [
         "Kualitas menyesuaikan mood editor",
@@ -55,9 +55,9 @@
       "workloadPerMin": 0.5,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 0.4,
-        "idealDaysPerMinute": 0.8,
-        "surchargePercent": 10
+        "minDaysPerMinute": 2,
+        "idealDaysPerMinute": 5,
+        "surchargePercent": 15
       },
       "features": [
         "cut basic",
@@ -89,8 +89,8 @@
       "disabled": false,
       "deadlinePolicy": {
         "minDaysPerMinute": 2,
-        "idealDaysPerMinute": 3,
-        "surchargePercent": 12
+        "idealDaysPerMinute": 5,
+        "surchargePercent": 15
       },
       "features": [
         "cut + merge kompleks",
@@ -124,7 +124,7 @@
       "workloadPerMin": 3,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 3,
+        "minDaysPerMinute": 2,
         "idealDaysPerMinute": 5,
         "surchargePercent": 15
       },
