@@ -29,19 +29,10 @@
         "Random",
         "Eksperimen"
       ],
-      "policies": [
-        "Editor berhak berhenti di tengah proses editing, jika dirasa jenuh",
-        "Edit sesuai mood editor",
-        "Musik bebas terserah editor",
-        "Tidak ada revisi",
-        "Gratis (harga 0)",
-        "Boleh dipakai untuk portofolio editor",
-        "Konsep terserah editor",
-        "Tidak ada deadline",
-        "Editor berhak menolak projek jika file RAW dinilai tidak berkualitas",
-        "Klien tidak berhak complain atas hasil editing",
-        "Copyright dipegang editor",
-        "Klien boleh memberi saran, tapi tidak mengikat editor"
+      "policy": [
+        "Proses editing mengikuti kesenangan editor",
+        "Video tidak bersifat privasi dan boleh dipublikasikan",
+        "Editor bebas bereksperimen tanpa batas"
       ]
     },
     {
@@ -66,19 +57,10 @@
         "Video pendek promosi",
         "Video Tugas"
       ],
-      "policies": [
-        "Revisi gratis 1x. Lebih dari itu dikenakan IDR 10.000/revisi.",
-        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
-        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 10.000 - IDR 100.000 sesuai kerumitan brief revisi",
-        "Brief tidak boleh berubah setelah proyek dimulai.",
-        "Deadline dihitung setelah semua materi lengkap diterima.",
-        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
-        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
-        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
-        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
-        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
-        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00.",
-        "Publikasi hasil pekerjaan untuk portofolio hanya dilakukan jika ada izin tertulis dari klien (bisa berupa chat/email)."
+      "policy": [
+        "Kebijakan singkat dan fleksibel",
+        "Revisi ringan sesuai brief",
+        "Cocok untuk kebutuhan cepat"
       ]
     },
     {
@@ -106,19 +88,10 @@
         "Video Edukasi",
         "Film Pendek Ringan"
       ],
-      "policies": [
-        "Revisi gratis 2x. Lebih dari itu dikenakan IDR 15.000/revisi.",
-        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
-        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 15.000 - IDR 100.000 sesuai kerumitan brief revisi",
-        "Brief tidak boleh berubah setelah proyek dimulai.",
-        "Deadline dihitung setelah semua materi lengkap diterima.",
-        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
-        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
-        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
-        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
-        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
-        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00.",
-        "Publikasi hasil pekerjaan untuk portofolio hanya dilakukan jika ada izin tertulis dari klien (bisa berupa chat/email)."
+      "policy": [
+        "Kebijakan normal sesuai kesepakatan",
+        "DP diperlukan hanya pada kondisi tertentu",
+        "Revisi mengikuti brief yang jelas"
       ]
     },
     {
@@ -145,19 +118,11 @@
         "Motion Graphics",
         "Video Musik"
       ],
-      "policies": [
-        "Revisi gratis 3x. Lebih dari itu dikenakan IDR 20.000/revisi.",
-        "Revisi hanya berlaku untuk perubahan minor sesuai brief awal.",
-        "Revisi besar (ubah konsep, ganti musik total, ganti footage utama) dihitung biaya tambahan. IDR 20.000 - IDR 100.000 sesuai kerumitan brief revisi",
-        "Brief tidak boleh berubah setelah proyek dimulai.",
-        "Deadline dihitung setelah semua materi lengkap diterima.",
-        "DP 30–50% diperlukan jika nilai proyek melebihi Rp300.000.",
-        "Pelunasan sebelum hasil final tanpa watermark dikirim.",
-        "File kerja mentah (.prproj, .aep, dsb) tidak termasuk harga; diminta = biaya tambahan.",
-        "Editor berhak pakai karya sebagai portofolio, kecuali ada perjanjian NDA.",
-        "Revisi gratis jika kesalahan teknis dari editor (glitch, typo, salah potong scene).",
-        "Komunikasi & revisi dicatat via chat. Jam kerja: 09:00–22:00.",
-        "Publikasi hasil pekerjaan untuk portofolio hanya dilakukan jika ada izin tertulis dari klien (bisa berupa chat/email)."
+      "policy": [
+        "Paket premium dengan kebijakan ketat",
+        "DP wajib sebelum pengerjaan",
+        "Aturan lengkap melindungi editor",
+        "Revisi besar di luar brief awal dikenakan biaya tambahan"
       ]
     }
   ]
