@@ -118,6 +118,16 @@
     function addDays(date, days){ const d=new Date(date); d.setDate(d.getDate()+days); return d; }
     function nextDayStart(){ const d=new Date(); d.setDate(d.getDate()+1); d.setHours(0,0,0,0); return d; }
     function isValidUrl(u){ try{ new URL(u); return true; }catch(e){ return false; } }
+    function formatPercent(value){
+      const num=Number(value);
+      if(!Number.isFinite(num)) return '0';
+      return parseFloat(num.toFixed(2)).toString();
+    }
+    function formatDays(value){
+      const num=Number(value);
+      if(!Number.isFinite(num)) return '-';
+      return parseFloat(num.toFixed(2)).toString();
+    }
 
     let pkg=null; let cfg=null; let promo=null;
 
@@ -198,18 +208,18 @@
       }
 
       document.getElementById('sumOver').textContent=`${calc.overMin} mnt × ${Pricing.fmtIDR(calc.overRate)} = ${Pricing.fmtIDR(calc.overCost)}`;
-      document.getElementById('sumSurcharge').textContent=`+${calc.surPerc}% = ${Pricing.fmtIDR(calc.surchargeVal)}`;
+      document.getElementById('sumSurcharge').textContent=`+${formatPercent(calc.surPerc)}% = ${Pricing.fmtIDR(calc.surchargeVal)}`;
       document.getElementById('sumBuffer').textContent=`+${calc.bufPerc}% = ${Pricing.fmtIDR(calc.bufVal)}`;
       document.getElementById('sumTotal').textContent=Pricing.fmtIDR(calc.total);
       document.getElementById('eta').textContent=addDays(nextDayStart(),days-1).toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
       const surchargeNote=document.getElementById('surchargeNote');
-      if(calc.surchargeVal>0 && calc.surPerc>0 && calc.deadline?.surchargePercent){
+      if(calc.surPerc>0 && calc.deadline?.surchargePercent){
         const idealRate=calc.deadline?.idealDaysPerMinute ?? policy.idealDaysPerMinute;
-        const recommendedRaw=(idealRate||0)*durasi;
-        const recommendedDays=Math.max(policy.defaultDays, calc.deadline?.idealDays||0, Math.ceil(recommendedRaw||0));
+        const recommendedRaw=Number.isFinite(calc.deadline?.idealTotalDays)?calc.deadline.idealTotalDays:(idealRate||0)*durasi;
+        const recommendedText=formatDays(recommendedRaw);
         surchargeNote.style.display='block';
-        surchargeNote.textContent=`💡 Catatan: Harga akan lebih murah jika Anda menambah deadline ke ≥ ${recommendedDays} hari sehingga tidak dikenakan Deadline Surcharge.`;
+        surchargeNote.textContent=`💡 Catatan: Semakin lama deadline yang Anda pilih (hingga ${recommendedText} hari), semakin kecil biaya Deadline Surcharge.`;
       } else {
         surchargeNote.style.display='none';
         surchargeNote.textContent='';
@@ -253,7 +263,7 @@
         calc.discountPercent>0?`> Diskon ${calc.discountPercent}%: -${Pricing.fmtIDR(calc.normal-calc.baseFinal)}`:null,
         `> Base price: ${Pricing.fmtIDR(calc.baseFinal)}`,
         `> Overtime: ${calc.overMin} mnt × ${Pricing.fmtIDR(calc.overRate)} = ${Pricing.fmtIDR(calc.overCost)}`,
-        `> Deadline surcharge: +${calc.surPerc}% = ${Pricing.fmtIDR(calc.surchargeVal)}`,
+        `> Deadline surcharge: +${formatPercent(calc.surPerc)}% = ${Pricing.fmtIDR(calc.surchargeVal)}`,
         `> Buffer fee: +${calc.bufPerc}% = ${Pricing.fmtIDR(calc.bufVal)}`,
         `> ${Pricing.fmtIDR(calc.baseFinal)} + ${Pricing.fmtIDR(calc.overCost)} + ${Pricing.fmtIDR(calc.surchargeVal)} + ${Pricing.fmtIDR(calc.bufVal)}`,
         `> Total: *${Pricing.fmtIDR(calc.total)}*`,

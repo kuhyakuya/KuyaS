@@ -28,12 +28,14 @@ function getDeadlineGuidance(pkg, durasi){
   const idealDaysRaw = minutes * idealRate;
 
   const defaultDays = minutes > 0 ? Math.max(1, Math.ceil(defaultDaysRaw)) : 1;
-  const idealDays = minutes > 0 ? Math.max(defaultDays, Math.ceil(idealDaysRaw || defaultDaysRaw || defaultDays)) : defaultDays;
+  const idealDays = minutes > 0 ? Math.max(defaultDays, Math.ceil((idealDaysRaw || defaultDaysRaw || defaultDays))) : defaultDays;
 
   return {
     minDaysPerMinute: minRate,
     idealDaysPerMinute: idealRate,
     surchargePercent,
+    minTotalDays: defaultDaysRaw,
+    idealTotalDays: idealDaysRaw,
     defaultDays,
     idealDays
   };
@@ -74,8 +76,31 @@ function calcTotal(pkg, cfg, promo, durasi, deadline){
     deadlineInfo.defaultDays,
     Math.ceil(Math.max(0, Number(deadline) || 0))
   );
-  const surPerc = appliedDeadline < deadlineInfo.idealDays ? deadlineInfo.surchargePercent : 0;
-  const surchargeVal = Math.round(subTotal * (surPerc/100));
+
+  const maxSurcharge = Number(deadlineInfo.surchargePercent) || 0;
+  const minTotal = Number(deadlineInfo.minTotalDays);
+  const idealTotal = Number(deadlineInfo.idealTotalDays);
+  let surPerc = 0;
+
+  if (maxSurcharge > 0) {
+    const hasRange = Number.isFinite(minTotal) && Number.isFinite(idealTotal) && idealTotal > minTotal;
+    if (!hasRange) {
+      const thresholds = [];
+      if (Number.isFinite(idealTotal)) thresholds.push(idealTotal);
+      if (Number.isFinite(minTotal)) thresholds.push(minTotal);
+      const threshold = thresholds.length ? Math.max(...thresholds) : null;
+      surPerc = threshold !== null && appliedDeadline >= threshold ? 0 : maxSurcharge;
+    } else if (appliedDeadline >= idealTotal) {
+      surPerc = 0;
+    } else {
+      const ratioRaw = (appliedDeadline - minTotal) / (idealTotal - minTotal);
+      const ratio = Math.max(0, Math.min(1, ratioRaw));
+      surPerc = maxSurcharge * (1 - ratio);
+    }
+  }
+
+  const surPercRounded = Number.isFinite(surPerc) ? Math.max(0, Math.min(maxSurcharge, parseFloat(surPerc.toFixed(2)))) : 0;
+  const surchargeVal = Math.round(subTotal * (surPercRounded/100));
 
   // buffer fee
   const bufPerc = computeBufferPercent(durasi, cfg.bufferFee);
@@ -91,7 +116,7 @@ function calcTotal(pkg, cfg, promo, durasi, deadline){
     overRate: pkg.overRatePerMin,
     overCost,
     surchargeVal,
-    surPerc,
+    surPerc: surPercRounded,
     bufVal,
     bufPerc,
     total,
