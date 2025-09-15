@@ -55,8 +55,8 @@
       "workloadPerMin": 0.5,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 2,
-        "idealDaysPerMinute": 5,
+        "minDaysPerMinute": 0.25,
+        "idealDaysPerMinute": 0.5,
         "surchargePercent": 15
       },
       "features": [
@@ -88,8 +88,8 @@
       "workloadPerMin": 1,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 2,
-        "idealDaysPerMinute": 5,
+        "minDaysPerMinute": 1,
+        "idealDaysPerMinute": 3,
         "surchargePercent": 15
       },
       "features": [
@@ -124,7 +124,7 @@
       "workloadPerMin": 3,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 2,
+        "minDaysPerMinute": 3,
         "idealDaysPerMinute": 5,
         "surchargePercent": 15
       },
