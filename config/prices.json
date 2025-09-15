@@ -30,7 +30,16 @@
         "Eksperimen"
       ],
       "policy": [
+        "Editor berhak berhenti di tengah proses editing, jika dirasa jenuh",
+        "Edit sesuai mood editor",
+        "Musik bebas terserah editor",
+        "Tidak ada revisi",
+        "Gratis (harga IDR 0)",
         "Proses editing mengikuti kesenangan editor",
+        "Konsep terserah editor",
+        "Tidak ada deadline",
+        "Editor berhak menolak projek jika file RAW dinilai tidak berkualitas",
+        "Klien tidak berhak complain atas hasil editing",
         "Video tidak bersifat privasi dan boleh dipublikasikan",
         "Editor bebas bereksperimen tanpa batas"
       ]
