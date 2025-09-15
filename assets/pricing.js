@@ -13,6 +13,32 @@ function computeBufferPercent(durasi, map){
   return percent;
 }
 
+function getDeadlineGuidance(pkg, durasi){
+  const policy = pkg?.deadlinePolicy || {};
+  const minRateRaw = Number(policy.minDaysPerMinute);
+  const idealRateRaw = Number(policy.idealDaysPerMinute);
+  const surchargePercentRaw = Number(policy.surchargePercent);
+
+  const minRate = Number.isFinite(minRateRaw) && minRateRaw >= 0 ? minRateRaw : 1;
+  const idealRate = Number.isFinite(idealRateRaw) && idealRateRaw >= 0 ? idealRateRaw : minRate;
+  const surchargePercent = Number.isFinite(surchargePercentRaw) && surchargePercentRaw > 0 ? surchargePercentRaw : 0;
+
+  const minutes = Math.max(0, Number(durasi) || 0);
+  const defaultDaysRaw = minutes * minRate;
+  const idealDaysRaw = minutes * idealRate;
+
+  const defaultDays = minutes > 0 ? Math.max(1, Math.ceil(defaultDaysRaw)) : 1;
+  const idealDays = minutes > 0 ? Math.max(defaultDays, Math.ceil(idealDaysRaw || defaultDaysRaw || defaultDays)) : defaultDays;
+
+  return {
+    minDaysPerMinute: minRate,
+    idealDaysPerMinute: idealRate,
+    surchargePercent,
+    defaultDays,
+    idealDays
+  };
+}
+
 // ===== Load Config =====
 async function loadConfig(basePath=".."){
   const [pricesRes, promoRes] = await Promise.allSettled([
@@ -43,8 +69,12 @@ function calcTotal(pkg, cfg, promo, durasi, deadline){
   // subtotal setelah diskon + overtime
   const subTotal = final + overCost;
 
-  // surcharge
-  const surPerc = cfg.surcharge?.[deadline] || 0;
+  const deadlineInfo = getDeadlineGuidance(pkg, durasi);
+  const appliedDeadline = Math.max(
+    deadlineInfo.defaultDays,
+    Math.ceil(Math.max(0, Number(deadline) || 0))
+  );
+  const surPerc = appliedDeadline < deadlineInfo.idealDays ? deadlineInfo.surchargePercent : 0;
   const surchargeVal = Math.round(subTotal * (surPerc/100));
 
   // buffer fee
@@ -64,7 +94,11 @@ function calcTotal(pkg, cfg, promo, durasi, deadline){
     surPerc,
     bufVal,
     bufPerc,
-    total
+    total,
+    deadline: {
+      ...deadlineInfo,
+      chosenDays: appliedDeadline
+    }
   };
 }
 
@@ -73,5 +107,6 @@ window.Pricing = {
   fmtIDR,
   loadConfig,
   getFinalPrice,
-  calcTotal
+  calcTotal,
+  getDeadlineGuidance
 };
