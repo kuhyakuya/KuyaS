@@ -67,17 +67,30 @@ function renderPortfolio(items){
     }
     container.appendChild(el);
   });
+
+  // if portfolio already visible, animate items after DOM update
+  if(container.style.display !== 'none'){
+    animatePortfolioItems();
+  }
 }
 
 function animatePortfolioItems(){
-  const items=document.querySelectorAll('#portfolio .portfolio-item');
-  items.forEach((el,i)=>{
-    setTimeout(()=>el.classList.add('show'),i*150);
-  });
+  const container=document.getElementById('portfolio');
+  if(!container) return;
+  const items=container.querySelectorAll('.portfolio-item');
+  setTimeout(()=>{ // allow reflow before starting
+    items.forEach((el,i)=>{
+      setTimeout(()=>{
+        el.classList.add('show');
+      },i*150);
+    });
+  },50);
 }
 
 function resetPortfolioItems(){
-  document.querySelectorAll('#portfolio .portfolio-item.show').forEach(el=>el.classList.remove('show'));
+  const container=document.getElementById('portfolio');
+  if(!container) return;
+  container.querySelectorAll('.portfolio-item').forEach(el=>el.classList.remove('show'));
 }
 window.Portfolio = {
   loadAndRender: loadAndRenderPortfolio,
