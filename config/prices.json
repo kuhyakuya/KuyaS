@@ -55,7 +55,7 @@
       "workloadPerMin": 0.5,
       "disabled": false,
       "deadlinePolicy": {
-        "minDaysPerMinute": 0,
+        "minDaysPerMinute": 0.2,
         "idealDaysPerMinute": 0.2,
         "surchargePercent": 15
       },
