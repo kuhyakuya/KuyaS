@@ -22,15 +22,17 @@
 
     #kodeInput::placeholder{color:rgba(255,255,255,0.65);}
 
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;padding-bottom:40px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo img{width:44px;height:44px;border-radius:8px;object-fit:cover}
     h1{font-size:18px}
     p.lead{color:var(--muted);font-size:13px;margin-top:4px;min-height:16px;transition:opacity .5s ease}
-    .order-check-btn{padding:6px 12px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap}
-    .order-check-btn:focus-visible{outline:2px solid rgba(255,0,114,0.6);outline-offset:2px}
+    .order-button-fixed{position:fixed;top:20px;right:20px;z-index:1000}
+    .btn-cek-status{padding:6px 12px;background:transparent;color:#ff0072;border:2px solid #ff0072;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s ease}
+    .btn-cek-status:hover{background:#ff0072;color:#fff}
+    .btn-cek-status:focus-visible{outline:2px solid rgba(255,0,114,0.6);outline-offset:2px}
 
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:16px}
 
     /* ===== Portfolio ===== */
     .portfolio-section h2{margin:40px 0 16px;font-size:18px}
@@ -158,6 +160,10 @@
   </style>
 </head>
 <body>
+  <div class="order-button-fixed">
+    <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
+  </div>
+
   <main class="container">
     <header>
       <div class="brand">
@@ -167,7 +173,6 @@
           <p class="lead" id="rotating-text">Hasil bisa di lihat di portofolio</p>
         </div>
       </div>
-      <button id="openOrderBtn" type="button" class="order-check-btn">Cek Status Order</button>
     </header>
 
     <section class="grid" id="packages"></section>
