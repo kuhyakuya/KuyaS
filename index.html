@@ -284,7 +284,6 @@
       finishDate:3,
       expireBackup:4,
       title:5,
-      status:6,
       statusProgress:7
     };
 
@@ -364,7 +363,11 @@
         finishDate:findIndex('tanggal selesai'),
         expireBackup:findIndex('expire backup'),
         title:findIndex('judul'),
-        status:findIndex('status'),
+        status:(()=>{
+          const statusFileIndex=findIndex('status file');
+          if(statusFileIndex!==-1) return statusFileIndex;
+          return findIndex('status');
+        })(),
         statusProgress:findIndex('status progres')
       };
     }
@@ -372,6 +375,7 @@
     function getColumnIndex(key){
       const mapped=orderColumns?.[key];
       if(typeof mapped==='number' && mapped>=0) return mapped;
+      if(key==='status') return -1;
       return defaultColumnIndexes[key]??-1;
     }
 
