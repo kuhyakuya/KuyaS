@@ -28,36 +28,6 @@
 
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
 
-    .order-search{
-      margin:24px 0;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:center;
-    }
-    .order-search input{
-      flex:1 1 220px;
-      min-width:220px;
-      padding:10px 14px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.12);
-      background:var(--card);
-      color:#fff;
-      font-size:14px;
-    }
-    .order-search input::placeholder{color:var(--muted)}
-    .order-search button{
-      padding:10px 20px;
-      border-radius:10px;
-      border:none;
-      background:var(--accent);
-      color:#fff;
-      font-weight:600;
-      cursor:pointer;
-      transition:opacity .2s ease;
-    }
-    .order-search button:hover{opacity:.85}
-
     /* ===== Portfolio ===== */
     .portfolio-section h2{margin:40px 0 16px;font-size:18px}
     .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
@@ -178,6 +148,16 @@
   </style>
 </head>
 <body>
+  <div style="position:fixed;top:20px;right:20px;display:flex;gap:8px;z-index:999;align-items:center;">
+    <input id="kodeInput" type="text" placeholder="Masukkan Code Order untuk cek ketersediaan file…"
+      style="width:250px;padding:6px 10px;border-radius:6px;border:1px solid #ccc;outline:none;background:#fff;color:#333;"
+      autocomplete="off">
+    <button id="searchBtn" type="button"
+      style="padding:6px 12px;background:#ff0072;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">
+      Cek Ketersediaan File
+    </button>
+  </div>
+
   <main class="container">
     <header>
       <div class="brand">
@@ -188,11 +168,6 @@
         </div>
       </div>
     </header>
-
-    <div class="order-search">
-      <input type="text" id="kodeInput" placeholder="Masukkan Code Order…" autocomplete="off">
-      <button type="button" id="searchBtn">Cari</button>
-    </div>
 
     <section class="grid" id="packages"></section>
 
@@ -384,7 +359,7 @@
           }else{
             orderModalContent.innerHTML=`
               <h3 id="orderModalTitle">Detail Code Order</h3>
-              <p>Code Order tidak ditemukan.</p>
+              <p>Code Order tidak ditemukan atau file tidak tersedia.</p>
             `;
           }
         }
