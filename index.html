@@ -20,6 +20,8 @@
       background:var(--bg);color:#fff;padding:32px;display:flex;justify-content:center;min-height:100vh}
     .container{max-width:1100px;width:100%;padding-bottom:60px}
 
+    #kodeInput::placeholder{color:rgba(255,255,255,0.65);}
+
     header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo img{width:44px;height:44px;border-radius:8px;object-fit:cover}
@@ -149,8 +151,8 @@
 </head>
 <body>
   <div style="position:fixed;top:20px;right:20px;display:flex;gap:8px;z-index:999;align-items:center;">
-    <input id="kodeInput" type="text" placeholder="Masukkan Code Order untuk cek ketersediaan file…"
-      style="width:250px;padding:6px 10px;border-radius:6px;border:1px solid #ccc;outline:none;background:#fff;color:#333;"
+    <input id="kodeInput" type="text" placeholder="Input Code Order"
+      style="width:250px;padding:6px 10px;border-radius:6px;border:1px solid #ff0072;outline:none;background:var(--card);color:#fff;"
       autocomplete="off">
     <button id="searchBtn" type="button"
       style="padding:6px 12px;background:#ff0072;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">
