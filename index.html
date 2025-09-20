@@ -18,7 +18,7 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
       background:var(--bg);color:#fff;padding:32px;display:flex;justify-content:center;min-height:100vh}
-    .container{max-width:1100px;width:100%;padding-bottom:60px}
+    .container{max-width:1100px;width:100%;padding-bottom:60px;margin:0 auto;position:relative}
 
     #kodeInput::placeholder{color:rgba(255,255,255,0.65);}
 
@@ -27,8 +27,7 @@
     .logo img{width:44px;height:44px;border-radius:8px;object-fit:cover}
     h1{font-size:18px}
     p.lead{color:var(--muted);font-size:13px;margin-top:4px;min-height:16px;transition:opacity .5s ease}
-    .order-button-fixed{position:fixed;top:20px;right:20px;z-index:1000}
-    .btn-cek-status{padding:6px 12px;background:transparent;color:#ff0072;border:2px solid #ff0072;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s ease}
+    .btn-cek-status{position:absolute;top:20px;right:20px;padding:6px 12px;background:transparent;color:#ff0072;border:2px solid #ff0072;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s ease;z-index:1000}
     .btn-cek-status:hover{background:#ff0072;color:#fff}
     .btn-cek-status:focus-visible{outline:2px solid rgba(255,0,114,0.6);outline-offset:2px}
 
@@ -160,11 +159,8 @@
   </style>
 </head>
 <body>
-  <div class="order-button-fixed">
-    <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
-  </div>
-
   <main class="container">
+    <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
     <header>
       <div class="brand">
         <div class="logo"><img src="img/Logo.png" alt="Logo"></div> <!-- path updated -->
