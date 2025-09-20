@@ -124,6 +124,7 @@
     .modal-content p strong{color:#fff}
     .modal .close{position:absolute;top:14px;right:18px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1}
     .modal-status{font-weight:700}
+    .progress-status{font-weight:700}
     .modal-status.available{color:#4caf50}
     .modal-status.unavailable{color:#f44336}
     #popup-isi{margin-top:16px;font-size:14px}
@@ -161,7 +162,7 @@
 <body>
   <main class="container">
     <header class="site-header">
-      <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
+      <button id="openOrderBtn" type="button" class="btn-cek-status" title="Pantau ketersediaan file dan progres order secara real-time.">Order Tracker</button>
       <div class="brand">
         <div class="logo"><img src="img/Logo.png" alt="Logo"></div> <!-- path updated -->
         <div>
@@ -188,7 +189,7 @@
   <div id="orderModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="orderModalTitle">
     <div class="modal-content">
       <button class="close" type="button" id="orderModalClose" aria-label="Tutup popup">&times;</button>
-      <h3 id="orderModalTitle">Cek Ketersediaan File</h3>
+      <h3 id="orderModalTitle">Order Tracker</h3>
       <div class="modal-form">
         <input id="kodeInput" type="text" placeholder="Input Code Order" autocomplete="off">
         <button id="searchBtn" type="button">Cek Ketersediaan File</button>
@@ -274,6 +275,30 @@
 
     const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRZiGRgDxVjlJupwCAb29TPzNlksU5kISHLkmfpqbdwO_NQ__PEOk8FxuHe_UwzxWe5pcnfTJ1MFX3b/pub?gid=0&single=true&output=csv";
     let orderRowsCache=null;
+    let orderColumns=null;
+
+    const defaultColumnIndexes={
+      orderCode:0,
+      projectCode:1,
+      orderDate:2,
+      finishDate:3,
+      expireBackup:4,
+      title:5,
+      status:6,
+      statusProgress:7
+    };
+
+    const statusColorMap={
+      'waiting asset':'#ff9800',
+      'preparing asset':'#ffc107',
+      'rendering':'#2196f3',
+      'revision':'#9c27b0',
+      'payment':'#4caf50',
+      'approved':'#2e7d32',
+      'none':'#9e9e9e',
+      'kosong':'#9e9e9e',
+      '':'#9e9e9e'
+    };
 
     const orderModal=document.getElementById('orderModal');
     const orderModalContent=document.getElementById('popup-isi');
@@ -284,11 +309,15 @@
     const defaultOrderMessage='<p>Masukkan Code Order untuk menampilkan detail.</p>';
 
     async function loadOrderRows(){
-      if(orderRowsCache) return orderRowsCache;
+      if(orderRowsCache){
+        if(!orderColumns) orderColumns=mapColumns(orderRowsCache[0]||[]);
+        return orderRowsCache;
+      }
       const response=await fetch(CSV_URL);
       if(!response.ok) throw new Error(`Gagal memuat CSV: ${response.status}`);
       const text=(await response.text()).trim();
       orderRowsCache=parseCSV(text);
+      orderColumns=mapColumns(orderRowsCache[0]||[]);
       return orderRowsCache;
     }
 
@@ -324,6 +353,44 @@
         .map(row=>row.map(cell=>cell.trim()));
     }
 
+    function mapColumns(headerRow){
+      if(!Array.isArray(headerRow)) return null;
+      const normalized=headerRow.map(cell=>String(cell||'').trim().toLowerCase());
+      const findIndex=name=>normalized.indexOf(name);
+      return {
+        orderCode:findIndex('code order'),
+        projectCode:findIndex('code projek'),
+        orderDate:findIndex('tanggal order'),
+        finishDate:findIndex('tanggal selesai'),
+        expireBackup:findIndex('expire backup'),
+        title:findIndex('judul'),
+        status:findIndex('status'),
+        statusProgress:findIndex('status progres')
+      };
+    }
+
+    function getColumnIndex(key){
+      const mapped=orderColumns?.[key];
+      if(typeof mapped==='number' && mapped>=0) return mapped;
+      return defaultColumnIndexes[key]??-1;
+    }
+
+    function getCellValue(row,key){
+      const idx=getColumnIndex(key);
+      if(idx<0 || idx>=row.length) return '';
+      return String(row[idx]??'').trim();
+    }
+
+    function getProgressColor(status){
+      const value=String(status||'').trim();
+      if(!value) return statusColorMap.none;
+      const lower=value.toLowerCase();
+      if(lower.startsWith('ongoing')) return '#fbc02d';
+      if(statusColorMap[lower]) return statusColorMap[lower];
+      if(lower.includes('none')||lower.includes('kosong')) return statusColorMap.none;
+      return statusColorMap.none;
+    }
+
     function openOrderModal(){
       if(!orderModal) return;
       orderModal.classList.add('show');
@@ -341,25 +408,45 @@
     async function cariData(){
       const kodeDicari=(kodeInput?.value||'').trim();
       if(!kodeDicari){ alert('Masukkan Code Order dulu'); return; }
+      const kodeDicariLower=kodeDicari.toLowerCase();
       if(orderModalContent){
         orderModalContent.innerHTML='<p>Sedang mencari data...</p>';
       }
       openOrderModal();
       try{
         const rows=await loadOrderRows();
-        const dataRow=rows.slice(1).find(row=>(row[0]||'').trim().toLowerCase()===kodeDicari.toLowerCase());
+        const dataRow=rows.slice(1).find(row=>getCellValue(row,'orderCode').toLowerCase()===kodeDicariLower);
         if(orderModalContent){
           if(dataRow){
-            const statusText=(dataRow[6]||'').trim();
-            const statusClass=statusText.toLowerCase()==='tersedia'?'available':'unavailable';
+            const orderCodeValue=getCellValue(dataRow,'orderCode')||'-';
+            const projectCodeValue=getCellValue(dataRow,'projectCode')||'-';
+            const orderDateValue=getCellValue(dataRow,'orderDate')||'-';
+            const finishDateValue=getCellValue(dataRow,'finishDate')||'-';
+            const expireBackupValue=getCellValue(dataRow,'expireBackup')||'-';
+            const titleValue=getCellValue(dataRow,'title')||'-';
+            const statusRaw=getCellValue(dataRow,'status');
+            const statusDisplay=statusRaw||'None';
+            const statusLower=statusRaw?statusRaw.toLowerCase():'';
+            let statusClass='';
+            if(statusLower==='tersedia'||statusLower==='available'){ statusClass='available'; }
+            else if(statusLower==='tidak tersedia'||statusLower==='unavailable'){ statusClass='unavailable'; }
+            const statusStyle=statusClass?'':` style="color:${getProgressColor(statusRaw)};"`;
+
+            const progressRaw=getCellValue(dataRow,'statusProgress');
+            const hasProgressColumn=typeof (orderColumns?.statusProgress)==='number' && orderColumns.statusProgress>=0;
+            const hasProgressValue=progressRaw!=='';
+            const progressMarkup=(hasProgressColumn||hasProgressValue)
+              ? `\n              <p><strong>Status Progres:</strong> <span class="progress-status" style="color:${getProgressColor(progressRaw)};">${escapeHtml(progressRaw||'None')}</span></p>`
+              : '';
+
             orderModalContent.innerHTML=`
-              <p><strong>Code Order:</strong> ${escapeHtml(dataRow[0]||'-')}</p>
-              <p><strong>Code Projek:</strong> ${escapeHtml(dataRow[1]||'-')}</p>
-              <p><strong>Tanggal Order:</strong> ${escapeHtml(dataRow[2]||'-')}</p>
-              <p><strong>Tanggal Selesai:</strong> ${escapeHtml(dataRow[3]||'-')}</p>
-              <p><strong>Expire Backup:</strong> ${escapeHtml(dataRow[4]||'-')}</p>
-              <p><strong>Judul:</strong> ${escapeHtml(dataRow[5]||'-')}</p>
-              <p><strong>Status:</strong> <span class="modal-status ${statusClass}">${escapeHtml(statusText||'-')}</span></p>
+              <p><strong>Code Order:</strong> ${escapeHtml(orderCodeValue)}</p>
+              <p><strong>Code Projek:</strong> ${escapeHtml(projectCodeValue)}</p>
+              <p><strong>Tanggal Order:</strong> ${escapeHtml(orderDateValue)}</p>
+              <p><strong>Tanggal Selesai:</strong> ${escapeHtml(finishDateValue)}</p>
+              <p><strong>Expire Backup:</strong> ${escapeHtml(expireBackupValue)}</p>
+              <p><strong>Judul:</strong> ${escapeHtml(titleValue)}</p>
+              <p><strong>Status File:</strong> <span class="modal-status${statusClass?` ${statusClass}`:''}"${statusStyle}>${escapeHtml(statusDisplay)}</span></p>${progressMarkup}
             `;
           }else{
             orderModalContent.innerHTML='<p>Code Order tidak ditemukan atau file tidak tersedia.</p>';
