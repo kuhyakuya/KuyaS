@@ -68,7 +68,7 @@
           </div>
           <div>
             <label for="deadline">Deadline (hari) *</label>
-            <input id="deadline" type="number" min="1" step="1" required>
+            <input id="deadline" type="number" step="1" required>
             <div id="deadlineHelper" class="helper">Perhitungan dimulai <b>hari berikutnya sesuai jam kerja</b> setelah <b>file RAW diterima</b>.</div>
           </div>
         </div>
@@ -143,43 +143,85 @@
 
         document.getElementById('pkgName').textContent = pkg.name;
 
-        ['durasi','deadline','ref','note'].forEach(id=>{
-          document.getElementById(id).addEventListener('input',update);
-          document.getElementById(id).addEventListener('change',update);
-        });
-        document.getElementById('note').addEventListener('input',updateCounter);
+        const durasiInput=document.getElementById('durasi');
+        const deadlineInput=document.getElementById('deadline');
+        const refInput=document.getElementById('ref');
+        const noteInput=document.getElementById('note');
+
+        durasiInput.addEventListener('input',()=>update({reason:'durasi'}));
+        durasiInput.addEventListener('change',()=>update({reason:'durasi'}));
+
+        deadlineInput.addEventListener('input',()=>update({enforceDeadlineMin:false,reason:'deadline-input'}));
+        deadlineInput.addEventListener('blur',()=>update({enforceDeadlineMin:true,reason:'blur'}));
+
+        refInput.addEventListener('input',()=>update({reason:'ref'}));
+        refInput.addEventListener('change',()=>update({reason:'ref'}));
+
+        noteInput.addEventListener('input',()=>{update({enforceDeadlineMin:false,reason:'note'});updateCounter();});
+        noteInput.addEventListener('change',()=>update({reason:'note-change'}));
+
         document.getElementById('btnOrder').addEventListener('click',onOrder);
-        update();
+        update({reason:'init'});
       }catch(err){
         console.error('Init error:', err);
         alert('Config error: '+err.message);
       }
     })();
 
-    function update(){
+    function update(options={}){
+      const {enforceDeadlineMin=true,reason=''}=options;
       if(!pkg) return;
-      const durasi=Math.max(1,parseInt(document.getElementById('durasi').value||0,10));
+      const durasiInput=document.getElementById('durasi');
       const deadlineInput=document.getElementById('deadline');
-      const policy=Pricing.getDeadlineGuidance(pkg,durasi);
-      const rawDeadline=parseInt(deadlineInput.value||0,10);
-      const lastAuto=Number(deadlineInput.dataset.autoValue||0);
-      const isAutoValue=!rawDeadline||rawDeadline===lastAuto;
       const deadlineHelper=document.getElementById('deadlineHelper');
       const defaultHelper=`Perhitungan dimulai <b>hari berikutnya sesuai jam kerja</b> setelah <b>file RAW diterima</b>.`;
-      let days;
-      if(isAutoValue){
-        days=policy.defaultDays;
-        deadlineHelper.innerHTML=defaultHelper;
-      } else if(rawDeadline<policy.defaultDays){
-        days=policy.defaultDays;
-        deadlineHelper.innerHTML=`<span class='warn'>Deadline disesuaikan ke minimum ${policy.defaultDays} hari sesuai kebijakan paket.</span>`;
+
+      const durasiRaw=parseInt(durasiInput.value||0,10);
+      const durasi=Number.isFinite(durasiRaw)&&durasiRaw>0?durasiRaw:1;
+
+      const policy=Pricing.getDeadlineGuidance(pkg,durasi);
+      const minDays=policy.defaultDays;
+      deadlineInput.dataset.minDays=String(minDays);
+
+      const currentValue=(deadlineInput.value||'').trim();
+      const parsedDeadline=parseInt(currentValue,10);
+      const hasValidDeadline=Number.isFinite(parsedDeadline);
+
+      let days=minDays;
+      let helperMessage=defaultHelper;
+
+      if(enforceDeadlineMin){
+        const needsRestore=!hasValidDeadline||parsedDeadline<minDays;
+        if(!currentValue||needsRestore){
+          deadlineInput.value=String(minDays);
+          days=minDays;
+          helperMessage=needsRestore&&reason==='blur'?`<span class='warn'>Deadline minimum otomatis dikembalikan ke ${minDays} hari.</span>`:defaultHelper;
+        } else {
+          days=parsedDeadline;
+          helperMessage=defaultHelper;
+        }
       } else {
-        days=rawDeadline;
-        deadlineHelper.innerHTML=defaultHelper;
+        if(hasValidDeadline){
+          days=Math.max(minDays,parsedDeadline);
+          if(parsedDeadline<minDays){
+            helperMessage=`<span class='warn'>Deadline minimum untuk paket ini ${minDays} hari.</span>`;
+          }
+        } else {
+          days=minDays;
+          if(currentValue){
+            helperMessage=`<span class='warn'>Deadline minimum untuk paket ini ${minDays} hari.</span>`;
+          }
+        }
+        if(!currentValue){
+          helperMessage=`<span class='warn'>Deadline minimum untuk paket ini ${minDays} hari.</span>`;
+        }
       }
-      deadlineInput.value=String(days);
-      deadlineInput.min=String(policy.defaultDays);
-      deadlineInput.dataset.autoValue=String(policy.defaultDays);
+
+      if(enforceDeadlineMin&&reason!=='blur'){
+        helperMessage=defaultHelper;
+      }
+
+      deadlineHelper.innerHTML=helperMessage;
       const note=(document.getElementById('note').value||'').trim();
       const ref=(document.getElementById('ref').value||'').trim();
 
