@@ -418,36 +418,38 @@
         const dataRow=rows.slice(1).find(row=>getCellValue(row,'orderCode').toLowerCase()===kodeDicariLower);
         if(orderModalContent){
           if(dataRow){
-            const orderCodeValue=getCellValue(dataRow,'orderCode')||'-';
-            const projectCodeValue=getCellValue(dataRow,'projectCode')||'-';
-            const orderDateValue=getCellValue(dataRow,'orderDate')||'-';
-            const finishDateValue=getCellValue(dataRow,'finishDate')||'-';
-            const expireBackupValue=getCellValue(dataRow,'expireBackup')||'-';
-            const titleValue=getCellValue(dataRow,'title')||'-';
-            const statusRaw=getCellValue(dataRow,'status');
-            const statusDisplay=statusRaw||'None';
-            const statusLower=statusRaw?statusRaw.toLowerCase():'';
-            let statusClass='';
-            if(statusLower==='tersedia'||statusLower==='available'){ statusClass='available'; }
-            else if(statusLower==='tidak tersedia'||statusLower==='unavailable'){ statusClass='unavailable'; }
-            const statusStyle=statusClass?'':` style="color:${getProgressColor(statusRaw)};"`;
+            const rowData={
+              judul:getCellValue(dataRow,'title')||'-',
+              statusProgres:getCellValue(dataRow,'statusProgress')||'',
+              tanggalOrder:getCellValue(dataRow,'orderDate')||'-',
+              tanggalSelesai:getCellValue(dataRow,'finishDate')||'-',
+              expireBackup:getCellValue(dataRow,'expireBackup')||'-',
+              statusFile:getCellValue(dataRow,'status')||'',
+              codeProjek:getCellValue(dataRow,'projectCode')||'-',
+              codeOrder:getCellValue(dataRow,'orderCode')||'-'
+            };
 
-            const progressRaw=getCellValue(dataRow,'statusProgress');
-            const hasProgressColumn=typeof (orderColumns?.statusProgress)==='number' && orderColumns.statusProgress>=0;
-            const hasProgressValue=progressRaw!=='';
-            const progressMarkup=(hasProgressColumn||hasProgressValue)
-              ? `\n              <p><strong>Status Progres:</strong> <span class="progress-status" style="color:${getProgressColor(progressRaw)};">${escapeHtml(progressRaw||'None')}</span></p>`
-              : '';
+            const progressColor=getProgressColor(rowData.statusProgres);
+            const progressValue=rowData.statusProgres||'None';
+            const progressMarkup=`<p><strong>Status Progres:</strong> <span class="progress-status" style="color:${progressColor};">${escapeHtml(progressValue)}</span></p>`;
 
-            orderModalContent.innerHTML=`
-              <p><strong>Code Order:</strong> ${escapeHtml(orderCodeValue)}</p>
-              <p><strong>Code Projek:</strong> ${escapeHtml(projectCodeValue)}</p>
-              <p><strong>Tanggal Order:</strong> ${escapeHtml(orderDateValue)}</p>
-              <p><strong>Tanggal Selesai:</strong> ${escapeHtml(finishDateValue)}</p>
-              <p><strong>Expire Backup:</strong> ${escapeHtml(expireBackupValue)}</p>
-              <p><strong>Judul:</strong> ${escapeHtml(titleValue)}</p>
-              <p><strong>Status File:</strong> <span class="modal-status${statusClass?` ${statusClass}`:''}"${statusStyle}>${escapeHtml(statusDisplay)}</span></p>${progressMarkup}
-            `;
+            const statusFileNormalized=rowData.statusFile.trim().toLowerCase();
+            const statusFileDisplay=rowData.statusFile||'None';
+            let fileStatusStyle='font-weight:bold';
+            if(statusFileNormalized==='file tersedia') fileStatusStyle='color:#4CAF50;font-weight:bold';
+            else if(statusFileNormalized==='file tidak tersedia') fileStatusStyle='color:#F44336;font-weight:bold';
+
+            let html='';
+            html+=`<p><strong>Judul:</strong> ${escapeHtml(rowData.judul)}</p>`;
+            html+=progressMarkup;
+            html+=`<p><strong>Tanggal Order:</strong> ${escapeHtml(rowData.tanggalOrder)}</p>`;
+            html+=`<p><strong>Tanggal Selesai:</strong> ${escapeHtml(rowData.tanggalSelesai)}</p>`;
+            html+=`<p><strong>Expire Backup:</strong> ${escapeHtml(rowData.expireBackup)}</p>`;
+            html+=`<p><strong>Status File:</strong> <span class="modal-status" style="${fileStatusStyle}">${escapeHtml(statusFileDisplay)}</span></p>`;
+            html+=`<p><strong>Code Projek:</strong> ${escapeHtml(rowData.codeProjek)}</p>`;
+            html+=`<p><strong>Code Order:</strong> ${escapeHtml(rowData.codeOrder)}</p>`;
+
+            orderModalContent.innerHTML=html;
           }else{
             orderModalContent.innerHTML='<p>Code Order tidak ditemukan atau file tidak tersedia.</p>';
           }
