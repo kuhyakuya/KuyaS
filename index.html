@@ -118,7 +118,8 @@
       box-shadow:0 12px 32px rgba(0,0,0,0.45)}
     .modal-form{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
     .modal-form input{width:250px;padding:6px 10px;background:var(--card);color:#fff;border:1px solid var(--accent);border-radius:6px;outline:none}
-    .modal-form button{padding:6px 12px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600}
+    .modal-form button,
+    #backupRequestBtn{padding:6px 12px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600}
     .modal-content h3{margin-bottom:12px;font-size:18px}
     .modal-content p{margin-bottom:8px;color:var(--muted);font-size:14px}
     .modal-content p strong{color:#fff}
@@ -130,6 +131,8 @@
     #popup-isi{margin-top:16px;font-size:14px}
     #popup-isi p{margin-bottom:8px}
     #popup-isi p:last-child{margin-bottom:0}
+    #backupRequestBtn{margin-top:16px;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
+    #backupRequestBtn[disabled]{background:var(--disabled)!important;color:#aaa;cursor:not-allowed;pointer-events:none}
 
     .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);
       backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;
@@ -197,6 +200,7 @@
       <div id="popup-isi">
         <p>Masukkan Code Order untuk menampilkan detail.</p>
       </div>
+      <button id="backupRequestBtn" type="button" hidden>Minta File Backup</button>
     </div>
   </div>
 
@@ -305,7 +309,37 @@
     const kodeInput=document.getElementById('kodeInput');
     const searchBtn=document.getElementById('searchBtn');
     const openOrderBtn=document.getElementById('openOrderBtn');
+    const backupRequestBtn=document.getElementById('backupRequestBtn');
     const defaultOrderMessage='<p>Masukkan Code Order untuk menampilkan detail.</p>';
+
+    let lastOrderData=null;
+    let priceConfigCache=null;
+
+    function hideBackupRequestButton(){
+      if(backupRequestBtn){
+        backupRequestBtn.hidden=true;
+        backupRequestBtn.disabled=false;
+      }
+      lastOrderData=null;
+    }
+
+    function showBackupRequestButton(isDisabled){
+      if(!backupRequestBtn) return;
+      backupRequestBtn.hidden=false;
+      backupRequestBtn.disabled=!!isDisabled;
+    }
+
+    async function ensurePriceConfig(){
+      if(priceConfigCache) return priceConfigCache;
+      try{
+        const data=await Pricing.loadConfig(".");
+        priceConfigCache=data.prices||{};
+      }catch(err){
+        console.error('Gagal memuat konfigurasi WhatsApp:',err);
+        priceConfigCache={};
+      }
+      return priceConfigCache;
+    }
 
     async function loadOrderRows(){
       if(orderRowsCache){
@@ -411,6 +445,7 @@
 
     async function cariData(){
       const kodeDicari=(kodeInput?.value||'').trim();
+      hideBackupRequestButton();
       if(!kodeDicari){ alert('Masukkan Code Order dulu'); return; }
       const kodeDicariLower=kodeDicari.toLowerCase();
       if(orderModalContent){
@@ -437,8 +472,9 @@
             const progressValue=rowData.statusProgres||'None';
             const progressMarkup=`<p><strong>Status Progres:</strong> <span class="progress-status" style="color:${progressColor};">${escapeHtml(progressValue)}</span></p>`;
 
-            const statusFileNormalized=rowData.statusFile.trim().toLowerCase();
-            const statusFileDisplay=rowData.statusFile||'None';
+            const statusFileRaw=rowData.statusFile||'';
+            const statusFileNormalized=statusFileRaw.trim().toLowerCase();
+            const statusFileDisplay=statusFileRaw||'None';
             let fileStatusStyle='font-weight:bold';
             if(statusFileNormalized==='file tersedia') fileStatusStyle='color:#4CAF50;font-weight:bold';
             else if(statusFileNormalized==='file tidak tersedia') fileStatusStyle='color:#F44336;font-weight:bold';
@@ -454,8 +490,12 @@
             html+=`<p><strong>Code Order:</strong> ${escapeHtml(rowData.codeOrder)}</p>`;
 
             orderModalContent.innerHTML=html;
+            lastOrderData=rowData;
+            const isFileUnavailable=statusFileNormalized.includes('file tidak tersedia');
+            showBackupRequestButton(isFileUnavailable);
           }else{
             orderModalContent.innerHTML='<p>Code Order tidak ditemukan silahkan konfirmasi ke Freelancer.</p>';
+            hideBackupRequestButton();
           }
         }
       }catch(error){
@@ -463,12 +503,42 @@
         if(orderModalContent){
           orderModalContent.innerHTML='<p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>';
         }
+        hideBackupRequestButton();
       }
+    }
+
+    async function handleBackupRequestClick(){
+      if(!backupRequestBtn || backupRequestBtn.disabled) return;
+      if(!lastOrderData) return;
+      const config=await ensurePriceConfig();
+      const rawNumber=String(config?.whatsapp||'').trim();
+      const templateRaw=String(config?.backup_request_message||'').trim();
+      if(!rawNumber || !templateRaw){
+        alert('Konfigurasi WhatsApp belum tersedia.');
+        return;
+      }
+      const sanitizedNumber=rawNumber.replace(/[^\d]/g,'');
+      if(!sanitizedNumber){
+        alert('Nomor WhatsApp tidak valid.');
+        return;
+      }
+      const judul=lastOrderData.judul||'-';
+      const codeProjek=lastOrderData.codeProjek||'-';
+      const codeOrder=lastOrderData.codeOrder||'-';
+      let messageTemplate=templateRaw.replace(/%0A/gi,'\n');
+      let message=messageTemplate
+        .replace(/{{\s*judul\s*}}/gi,judul)
+        .replace(/{{\s*code_projek\s*}}/gi,codeProjek)
+        .replace(/{{\s*code_order\s*}}/gi,codeOrder);
+      const encodedMessage=encodeURIComponent(message);
+      const waUrl=`https://wa.me/${sanitizedNumber}?text=${encodedMessage}`;
+      window.open(waUrl,'_blank','noopener');
     }
 
     if(openOrderBtn) openOrderBtn.addEventListener('click',()=>{
       if(orderModalContent) orderModalContent.innerHTML=defaultOrderMessage;
       if(kodeInput){ kodeInput.value=''; }
+      hideBackupRequestButton();
       openOrderModal();
     });
     if(searchBtn) searchBtn.addEventListener('click',cariData);
@@ -476,9 +546,14 @@
     if(orderModalClose) orderModalClose.addEventListener('click',tutupPopup);
     if(orderModal) orderModal.addEventListener('click',e=>{ if(e.target===orderModal) tutupPopup(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&orderModal?.classList.contains('show')) tutupPopup(); });
+    if(backupRequestBtn) backupRequestBtn.addEventListener('click',handleBackupRequestClick);
 
     async function loadPackages(){
-      try{ const {prices,promo}=await Pricing.loadConfig("."); renderPackages(prices.packages,promo); }
+      try{
+        const {prices,promo}=await Pricing.loadConfig(".");
+        if(prices) priceConfigCache=prices;
+        renderPackages(prices.packages,promo);
+      }
       catch(e){ console.error("Load config error:",e); }
     }
 
