@@ -200,7 +200,7 @@
       <div id="popup-isi">
         <p>Masukkan Code Order untuk menampilkan detail.</p>
       </div>
-      <button id="backupRequestBtn" type="button" hidden>Minta File Backup</button>
+      <button id="backupRequestBtn" type="button" style="display:none">Minta File Backup</button>
     </div>
   </div>
 
@@ -317,16 +317,16 @@
 
     function hideBackupRequestButton(){
       if(backupRequestBtn){
-        backupRequestBtn.hidden=true;
-        backupRequestBtn.disabled=false;
+        backupRequestBtn.style.display='none';
+        backupRequestBtn.disabled=true;
       }
       lastOrderData=null;
     }
 
-    function showBackupRequestButton(isDisabled){
+    function showBackupRequestButton(){
       if(!backupRequestBtn) return;
-      backupRequestBtn.hidden=false;
-      backupRequestBtn.disabled=!!isDisabled;
+      backupRequestBtn.style.display='inline-flex';
+      backupRequestBtn.disabled=false;
     }
 
     async function ensurePriceConfig(){
@@ -490,9 +490,14 @@
             html+=`<p><strong>Code Order:</strong> ${escapeHtml(rowData.codeOrder)}</p>`;
 
             orderModalContent.innerHTML=html;
-            lastOrderData=rowData;
-            const isFileUnavailable=statusFileNormalized.includes('file tidak tersedia');
-            showBackupRequestButton(isFileUnavailable);
+            const canRequestBackup=statusFileNormalized.startsWith('file tersedia');
+            if(canRequestBackup){
+              lastOrderData=rowData;
+              showBackupRequestButton();
+            }else{
+              lastOrderData=null;
+              hideBackupRequestButton();
+            }
           }else{
             orderModalContent.innerHTML='<p>Code Order tidak ditemukan silahkan konfirmasi ke Freelancer.</p>';
             hideBackupRequestButton();
