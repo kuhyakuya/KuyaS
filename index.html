@@ -22,7 +22,7 @@
 
     #kodeInput::placeholder{color:rgba(255,255,255,0.65);}
 
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;padding-bottom:40px}
+    .site-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;padding-bottom:40px;position:relative;padding-right:140px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo img{width:44px;height:44px;border-radius:8px;object-fit:cover}
     h1{font-size:18px}
@@ -160,8 +160,8 @@
 </head>
 <body>
   <main class="container">
-    <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
-    <header>
+    <header class="site-header">
+      <button id="openOrderBtn" type="button" class="btn-cek-status">Cek Status Order</button>
       <div class="brand">
         <div class="logo"><img src="img/Logo.png" alt="Logo"></div> <!-- path updated -->
         <div>
