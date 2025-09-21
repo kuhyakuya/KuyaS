@@ -1,6 +1,7 @@
 (function(){
+  const TIME_ZONE="Asia/Jakarta";
   const DAY_NAMES=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-  const TIME_OPTIONS={timeZone:"Asia/Jakarta",hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"};
+  const TIME_OPTIONS={timeZone:TIME_ZONE,hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"};
 
   function formatJam(value){
     const numericValue=typeof value==="number"?value:parseInt(value,10);
@@ -15,6 +16,20 @@
     return raw.replace(/\./g,":");
   }
 
+  function normalizeDayName(name){
+    if(!name){
+      return "";
+    }
+    const lower=String(name).toLowerCase();
+    const matched=DAY_NAMES.find((day)=>day.toLowerCase()===lower);
+    return matched||name;
+  }
+
+  function getCurrentDayName(){
+    const formatted=new Intl.DateTimeFormat("id-ID",{timeZone:TIME_ZONE,weekday:"long"}).format(new Date());
+    return normalizeDayName(formatted);
+  }
+
   function parseTimeToMinutes(timeString){
     const [hourStr,minuteStr]=timeString.split(":");
     const hours=parseInt(hourStr,10);
@@ -25,33 +40,49 @@
     return hours*60+minutes;
   }
 
-  function updateView(schedule,statusElement,clockElement){
+  function highlightCurrentDay(listElement,currentDayName){
+    if(!listElement){
+      return;
+    }
+    const target=String(currentDayName||"").toLowerCase();
+    listElement.querySelectorAll(".jadwal-item").forEach((item)=>{
+      const itemDay=String(item.dataset.dayName||"").toLowerCase();
+      item.classList.toggle("hari-ini",itemDay===target);
+    });
+  }
+
+  function updateView(schedule,statusElement,clockElement,listElement){
     const now=new Date();
     const normalizedTime=getNormalizedTimeString(now);
     if(clockElement){
       clockElement.textContent=`Jam sekarang: ${normalizedTime} WIB`;
     }
 
+    const dayName=getCurrentDayName();
+    if(listElement){
+      highlightCurrentDay(listElement,dayName);
+    }
+
     if(!statusElement){
       return;
     }
 
-    const dayIndex=now.getDay();
-    const dayName=DAY_NAMES[dayIndex]||"";
     const todaySchedule=schedule&&schedule[dayName];
 
+    statusElement.classList.remove("status-open","status-closed","status-unavailable");
+
     if(todaySchedule&&typeof todaySchedule.buka!=="undefined"&&typeof todaySchedule.tutup!=="undefined"){
-      const bukaMinutes=todaySchedule.buka*60;
-      const tutupMinutes=todaySchedule.tutup*60;
+      const bukaMinutes=Number(todaySchedule.buka)*60;
+      const tutupMinutes=Number(todaySchedule.tutup)*60;
       const currentMinutes=parseTimeToMinutes(normalizedTime);
       const isOpen=currentMinutes!==null&&currentMinutes>=bukaMinutes&&currentMinutes<tutupMinutes;
       const statusLabel=isOpen?"Buka":"Tutup";
       const statusClass=isOpen?"status-open":"status-closed";
-      const bukaLabel=formatJam(todaySchedule.buka);
-      const tutupLabel=formatJam(todaySchedule.tutup);
-      statusElement.innerHTML=`<span class="status-label">Status:</span> <span class="status-text ${statusClass}">${statusLabel}</span> <span class="status-time">(${bukaLabel} – ${tutupLabel})</span>`;
+      statusElement.textContent=statusLabel;
+      statusElement.classList.add(statusClass);
     }else{
-      statusElement.innerHTML='<span class="status-label">Status:</span> <span class="status-text">Jadwal tidak tersedia</span>';
+      statusElement.textContent="Jadwal tidak tersedia";
+      statusElement.classList.add("status-unavailable");
     }
   }
 
@@ -76,9 +107,11 @@
       }else{
         timeLabel.textContent="-";
       }
+      item.dataset.dayName=dayName;
       item.append(dayLabel,timeLabel);
       listElement.appendChild(item);
     });
+    highlightCurrentDay(listElement,getCurrentDayName());
   }
 
   document.addEventListener("DOMContentLoaded",()=>{
@@ -99,7 +132,7 @@
     }
 
     let scheduleData={};
-    const update=()=>updateView(scheduleData,statusElement,clockElement);
+    const update=()=>updateView(scheduleData,statusElement,clockElement,listElement);
 
     fetch("config/prices.json")
       .then((response)=>{
@@ -118,7 +151,8 @@
       .catch((error)=>{
         console.error(error);
         if(statusElement){
-          statusElement.textContent="Status: Jadwal tidak tersedia";
+          statusElement.textContent="Jadwal tidak tersedia";
+          statusElement.classList.add("status-unavailable");
         }
         update();
       })
