@@ -170,14 +170,92 @@
     }
     #popup-jadwal.modal.tersembunyi{display:none;}
     #popup-jadwal .konten-modal{
-      background:#232323;padding:20px;border-radius:12px;
-      color:#fff;max-width:450px;text-align:center;
+      background:#232323;
+      padding:28px 32px;
+      border-radius:16px;
+      color:#fff;
+      max-width:480px;
+      width:100%;
       position:relative;
+      text-align:left;
+      box-shadow:0 18px 42px rgba(0,0,0,0.55);
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    #popup-jadwal .modal-heading{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding-right:24px;
+    }
+    #popup-jadwal .modal-heading h2{
+      font-size:22px;
+      margin:0;
     }
     #popup-jadwal #tutup-jadwal{
-      position:absolute;top:10px;right:20px;
-      background:none;border:none;color:#fff;font-size:24px;cursor:pointer;
+      position:absolute;
+      top:18px;
+      right:22px;
+      background:rgba(255,255,255,0.08);
+      border:none;
+      color:#fff;
+      font-size:20px;
+      cursor:pointer;
+      width:36px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      transition:background .2s ease;
     }
+    #popup-jadwal #tutup-jadwal:hover{
+      background:rgba(255,255,255,0.16);
+    }
+    #popup-jadwal .status-wrapper{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:16px;
+      font-weight:600;
+    }
+    #popup-jadwal .status-label{color:var(--muted);font-weight:600;}
+    #popup-jadwal .status-text{font-weight:700;}
+    #popup-jadwal .status-open{color:#4caf50;}
+    #popup-jadwal .status-closed{color:#f44336;}
+    #popup-jadwal .status-time{color:var(--muted);font-weight:500;}
+    #popup-jadwal #jam-realtime{
+      font-size:20px;
+      font-weight:700;
+    }
+    #popup-jadwal .jadwal-section h3{
+      margin-bottom:12px;
+    }
+    #popup-jadwal .jadwal-section{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    #popup-jadwal .jadwal-list{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    #popup-jadwal .jadwal-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      font-size:17px;
+      line-height:1.6;
+    }
+    #popup-jadwal .jadwal-hari{font-weight:600;}
+    #popup-jadwal .jadwal-jam{font-weight:600;color:var(--muted);margin-left:auto;text-align:right;min-width:120px;}
   </style>
 </head>
 <body>
@@ -283,12 +361,16 @@
 
   <div id="popup-jadwal" class="modal tersembunyi">
     <div class="konten-modal">
-      <button id="tutup-jadwal">×</button>
-      <h2>Jadwal Kerja</h2>
-      <p id="status-jadwal"></p>
+      <button id="tutup-jadwal" aria-label="Tutup jadwal">×</button>
+      <div class="modal-heading">
+        <h2>Jadwal Kerja</h2>
+        <div id="status-jadwal" class="status-wrapper" aria-live="polite"></div>
+      </div>
       <p id="jam-realtime"></p>
-      <h3>Jadwal Lengkap</h3>
-      <ul id="jadwal-lengkap"></ul>
+      <div class="jadwal-section">
+        <h3>Jadwal Lengkap</h3>
+        <ul id="jadwal-lengkap" class="jadwal-list"></ul>
+      </div>
     </div>
   </div>
 
