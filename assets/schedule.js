@@ -46,9 +46,12 @@
       const currentMinutes=parseTimeToMinutes(normalizedTime);
       const isOpen=currentMinutes!==null&&currentMinutes>=bukaMinutes&&currentMinutes<tutupMinutes;
       const statusLabel=isOpen?"Buka":"Tutup";
-      statusElement.textContent=`Status: ${statusLabel} (${formatJam(todaySchedule.buka)} – ${formatJam(todaySchedule.tutup)})`;
+      const statusClass=isOpen?"status-open":"status-closed";
+      const bukaLabel=formatJam(todaySchedule.buka);
+      const tutupLabel=formatJam(todaySchedule.tutup);
+      statusElement.innerHTML=`<span class="status-label">Status:</span> <span class="status-text ${statusClass}">${statusLabel}</span> <span class="status-time">(${bukaLabel} – ${tutupLabel})</span>`;
     }else{
-      statusElement.textContent="Status: Jadwal tidak tersedia";
+      statusElement.innerHTML='<span class="status-label">Status:</span> <span class="status-text">Jadwal tidak tersedia</span>';
     }
   }
 
@@ -58,14 +61,22 @@
     }
 
     listElement.innerHTML="";
+    listElement.classList.add("jadwal-list");
     DAY_NAMES.forEach((dayName)=>{
       const item=document.createElement("li");
+      item.className="jadwal-item";
+      const dayLabel=document.createElement("span");
+      dayLabel.className="jadwal-hari";
+      dayLabel.textContent=dayName;
+      const timeLabel=document.createElement("span");
+      timeLabel.className="jadwal-jam";
       const info=schedule&&schedule[dayName];
       if(info&&typeof info.buka!=="undefined"&&typeof info.tutup!=="undefined"){
-        item.textContent=`${dayName}: ${formatJam(info.buka)} – ${formatJam(info.tutup)}`;
+        timeLabel.textContent=`${formatJam(info.buka)} – ${formatJam(info.tutup)}`;
       }else{
-        item.textContent=`${dayName}: -`;
+        timeLabel.textContent="-";
       }
+      item.append(dayLabel,timeLabel);
       listElement.appendChild(item);
     });
   }
