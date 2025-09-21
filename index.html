@@ -216,27 +216,20 @@
     #popup-jadwal .status-wrapper{
       display:flex;
       align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      font-size:16px;
-      font-weight:600;
-    }
-    #popup-jadwal .status-label{color:var(--muted);font-weight:600;}
-    #popup-jadwal .status-text{font-weight:700;}
-    #popup-jadwal .status-open{color:#4caf50;}
-    #popup-jadwal .status-closed{color:#f44336;}
-    #popup-jadwal .status-time{color:var(--muted);font-weight:500;}
-    #popup-jadwal #jam-realtime{
-      font-size:20px;
+      font-size:22px;
       font-weight:700;
+      min-height:28px;
     }
+    #popup-jadwal .status-wrapper.status-open{color:#4ade80;}
+    #popup-jadwal .status-wrapper.status-closed{color:#f87171;}
+    #popup-jadwal .status-wrapper.status-unavailable{color:var(--muted);font-size:16px;font-weight:600;}
     #popup-jadwal .jadwal-section h3{
-      margin-bottom:12px;
+      margin-bottom:4px;
     }
     #popup-jadwal .jadwal-section{
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:16px;
     }
     #popup-jadwal .jadwal-list{
       list-style:none;
@@ -244,7 +237,7 @@
       margin:0;
       display:flex;
       flex-direction:column;
-      gap:4px;
+      gap:8px;
     }
     #popup-jadwal .jadwal-item{
       display:flex;
@@ -253,9 +246,55 @@
       gap:20px;
       font-size:17px;
       line-height:1.6;
+      padding:10px 16px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.03);
+      transition:background .2s ease,transform .2s ease;
     }
+    #popup-jadwal .jadwal-item.hari-ini{
+      background:rgba(59,130,246,0.18);
+      border:1px solid rgba(96,165,250,0.45);
+      box-shadow:0 8px 22px rgba(37,99,235,0.25);
+    }
+    #popup-jadwal .jadwal-item.hari-ini .jadwal-hari{color:#fff;}
+    #popup-jadwal .jadwal-item.hari-ini .jadwal-jam{color:#e0f2fe;}
     #popup-jadwal .jadwal-hari{font-weight:600;}
-    #popup-jadwal .jadwal-jam{font-weight:600;color:var(--muted);margin-left:auto;text-align:right;min-width:120px;}
+    #popup-jadwal .jadwal-jam{
+      font-weight:600;
+      color:var(--muted);
+      margin-left:auto;
+      text-align:right;
+      min-width:120px;
+    }
+    #popup-jadwal .modal-footer{
+      margin-top:auto;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      justify-content:flex-end;
+    }
+    #popup-jadwal #jam-realtime{
+      font-size:14px;
+      font-weight:600;
+      color:var(--muted);
+      letter-spacing:0.4px;
+    }
+    @media (max-width:520px){
+      #popup-jadwal .konten-modal{padding:24px 20px;}
+      #popup-jadwal .status-wrapper{font-size:18px;}
+      #popup-jadwal .jadwal-item{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+      }
+      #popup-jadwal .jadwal-jam{
+        min-width:auto;
+        text-align:left;
+      }
+      #popup-jadwal .modal-footer{
+        justify-content:center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -366,11 +405,13 @@
         <h2>Jadwal Kerja</h2>
         <div id="status-jadwal" class="status-wrapper" aria-live="polite"></div>
       </div>
-      <p id="jam-realtime"></p>
       <div class="jadwal-section">
         <h3>Jadwal Lengkap</h3>
         <ul id="jadwal-lengkap" class="jadwal-list"></ul>
       </div>
+      <footer class="modal-footer">
+        <p id="jam-realtime" aria-live="polite"></p>
+      </footer>
     </div>
   </div>
 
